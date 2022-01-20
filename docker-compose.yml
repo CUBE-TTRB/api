@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: root
+    volumes:
+      - data:/var/lib/postgresql/data
+
+  # adminer:
+  #   image: adminer
+  #   ports:
+  #     - 8080:8080
+
+  api:
+    build: .
+    ports:
+      - 3000:3000
+    environment:
+      NODE_ENV: production
+
+volumes:
+  data:
