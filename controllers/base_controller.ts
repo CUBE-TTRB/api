@@ -8,4 +8,4 @@ class BaseController {
 }
 
 const baseController = new BaseController()
-module.exports = baseController
+export default baseController

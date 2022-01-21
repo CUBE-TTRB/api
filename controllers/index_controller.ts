@@ -5,4 +5,4 @@ class IndexController {
 }
 
 const indexController = new IndexController()
-module.exports = indexController
+export default indexController
