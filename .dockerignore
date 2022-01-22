@@ -1,9 +1,17 @@
+# Git
+/.gitignore
+
+# Node
 /node_modules
 /package-lock.json
 
+# Docker
 /.dockerignore
-/.gitignore
 /docker-compose.yml
 /Dockerfile
 
+# Secrets
+*.env
+
+# Other
 /README.md

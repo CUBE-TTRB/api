@@ -2,14 +2,16 @@ services:
   postgres:
     image: postgres
     environment:
-      POSTGRES_PASSWORD: root
+      POSTGRES_USER: node
+      POSTGRES_PASSWORD: node
+      POSTGRES_DB: cube
     volumes:
       - data:/var/lib/postgresql/data
 
-  # adminer:
-  #   image: adminer
-  #   ports:
-  #     - 8080:8080
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
 
   api:
     build: .
@@ -17,6 +19,7 @@ services:
       - 3000:3000
     environment:
       NODE_ENV: development
+      DATABASE_URL: postgresql://node:node@postgres:5432/cube?schema=public
     command: npm run serve
     volumes:
       - .:/app

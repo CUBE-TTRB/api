@@ -1,8 +1,10 @@
+import { Request, Response } from 'express'
+
 class BaseController {
-  headers (_request, response, next) {
-    response.setHeader('Access-Control-Allow-Origin', '*')
-    response.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization')
-    response.setHeader('Access-Control-Allow-Methods', '*')
+  headers (_req: Request, res: Response, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization')
+    res.setHeader('Access-Control-Allow-Methods', '*')
     next()
   }
 }
