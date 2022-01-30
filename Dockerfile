@@ -1,4 +1,4 @@
-FROM node:17-alpine
+FROM node
 
 EXPOSE 3000
 
