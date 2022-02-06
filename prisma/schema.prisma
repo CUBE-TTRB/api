@@ -15,3 +15,52 @@ model User {
   email String  @unique
   name  String?
 }
+
+model Resource {
+  id          Int                 @id @default(autoincrement())
+  visibility  Visibility
+  state       State               @default(SUBMITTED)
+  type        Type
+  category    Category?           @relation(fields: [categoryId], references: [id])
+  categoryId  Int
+  relations   Relation[]
+  title       String?
+  body        String?
+  date        DateTime?
+  location    String?
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+  name String @unique
+  resources Resource[]
+}
+
+model Relation {
+  id Int @id @default(autoincrement())
+  name String @unique
+  resources Resource[]
+}
+
+enum Type {
+  ACTIVITY
+  ARTICLE
+  COURSE
+  EXERCISE
+  BOOKLET
+  VIDEOGAME
+  VIDEO
+}
+
+enum Visibility {
+  PRIVATE
+  PUBLIC
+  SHARED
+}
+
+enum State {
+  SUBMITTED
+  REFUSED
+  ACTIVE
+  INACTIVE
+}
