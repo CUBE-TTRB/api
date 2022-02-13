@@ -26,6 +26,10 @@
     "eslint-plugin-promise": "^5.2.0",
     "nodemon": "^2.0.15",
     "prisma": "^3.8.1",
+    "ts-node": "^10.4.0",
     "typescript": "^4.5.5"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }

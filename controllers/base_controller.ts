@@ -7,6 +7,14 @@ class BaseController {
     res.setHeader('Access-Control-Allow-Methods', '*')
     next()
   }
+
+  // recordNotFoundHandler (_req: Request, res: Response, next: any) {
+  //   try {
+  //     next()
+  //   } catch (error) {
+  //     res.status(404).send()
+  //   }
+  // }
 }
 
 const baseController = new BaseController()

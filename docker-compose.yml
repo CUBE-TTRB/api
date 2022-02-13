@@ -18,7 +18,8 @@ services:
   api:
     build: .
     ports:
-      - 3000:3000
+      - 3000:3000 # API
+      - 5555:5555 # Prisma Studio
     environment:
       NODE_ENV: development
       DATABASE_URL: postgresql://node:node@postgres:5432/cube?schema=public
