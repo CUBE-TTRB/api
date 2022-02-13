@@ -33,7 +33,10 @@ model Resource {
 model Category {
   id Int @id @default(autoincrement())
   name String @unique
+  default Boolean @default(false)
   resources Resource[]
+
+  @@unique(fields: [id, default])
 }
 
 model Relation {
