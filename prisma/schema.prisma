@@ -14,6 +14,15 @@ model User {
   id    Int     @id @default(autoincrement())
   email String  @unique
   name  String?
+  Authentification Authentification?
+}
+
+model Authentification {
+  id       Int   @id @default(autoincrement())
+  password Bytes
+  salt     Bytes
+  user     User  @relation(fields: [userId], references: [id])
+  userId   Int @unique
 }
 
 model Resource {
