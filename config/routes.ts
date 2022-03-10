@@ -3,6 +3,7 @@ import express from 'express'
 import baseController from '../controllers/base_controller'
 import usersController from '../controllers/users_controller'
 import resourcesController from '../controllers/resources_controller'
+import sessionsController from '../controllers/sessions_controller'
 
 const router = express.Router()
 
@@ -14,7 +15,7 @@ router.use(baseController.headers)
 router.get('/users', usersController.index)
 router.post('/users', usersController.create)
 
-router.post('/session', usersController.connect)
+router.post('/sessions', sessionsController.create)
 router.use('/users/:id', baseController.tokenCheck)
 router.get('/users/:id', usersController.show)
 // router.patch('/users/:id', usersController.update)
