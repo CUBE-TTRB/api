@@ -8,10 +8,15 @@ import activitiesController from '../controllers/activities_controller'
 const router = express.Router()
 
 router.use(baseController.headers)
+router.use(baseController.initLocals)
 // router.use(baseController.recordNotFoundHandler)
-
 router.get('/users', usersController.index)
 router.post('/users', usersController.create)
+router.post('/session', usersController.connect)
+
+router.use('/resources', baseController.tokenCheck)
+router.use('/users/:id', baseController.tokenCheck)
+
 router.get('/users/:id', usersController.show)
 // router.patch('/users/:id', usersController.update)
 // router.delete('/users/:id', usersController.destroy)
@@ -27,6 +32,8 @@ router.post('/activities', activitiesController.create)
 router.get('/activities/:id', activitiesController.show)
 router.patch('/activities/:id', activitiesController.update)
 router.delete('/activities/:id', activitiesController.destroy)
+
+router.use(baseController.responseHandler)
 
 router.use((_req, res, _next) => {
   res.status(404).send("Sorry can't find that!")
