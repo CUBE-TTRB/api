@@ -5,8 +5,9 @@ import IService from './IService'
 
 export default class CreateAuthService implements IService {
   private _user : any
-  errors : string[]
+  errors : any[]
   private _password : string
+
   constructor (user : any, password : string) {
     this._user = user
     this.errors = []
@@ -29,7 +30,7 @@ export default class CreateAuthService implements IService {
         }
       })
     } catch (error: any) {
-      this.errors.push(new PrismaErrorAdapter(error).message)
+      this.errors.push(new PrismaErrorAdapter(error))
     }
     return this
   }

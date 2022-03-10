@@ -28,7 +28,7 @@ class UsersController {
       await authService.call()
       if (authService.errors.length !== 0) {
         res.status(500)
-        res.locals.errors = res.locals.errors.concat(authService.errors)
+        res.locals.errors = res.locals.errors.concat({ serviceErrors: authService.errors })
         await prisma.user.delete({ where: { id: user.id } })
         next()
       } else {

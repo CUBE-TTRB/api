@@ -45,13 +45,11 @@ class BaseController {
   }
 
   responseHandler (_req: Request, res: Response, next: any) {
-    console.log('response ok')
     if (res.statusCode >= 200 && res.statusCode <= 400) {
       res.json({ token: res.locals.token, result: res.locals.result })
     } else {
       res.json({ token: res.locals.token, errors: res.locals.errors })
     }
-    console.log('fin de request')
   }
   // recordNotFoundHandler (_req: Request, res: Response, next: any) {
   //   try {

@@ -12,7 +12,7 @@ export class PrismaErrorAdapter implements StandardApiError {
   constructor (prismaError: Readonly<any>) {
     // Default values, jsut in case
     this.attribute = 'base'
-    this.message = 'unknown error'
+    this.message = prismaError.message
 
     if (prismaError instanceof PrismaClientKnownRequestError) {
       if (prismaError.code === 'P2003') { // Foreign Key constraint
