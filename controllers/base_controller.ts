@@ -3,6 +3,11 @@ import JwtHandler from '../lib/Encryption/JwtHandler'
 import JwtProducer from '../lib/Encryption/JwtProducer'
 
 class BaseController {
+  initLocals (_req: Request, res: Response, next: any) {
+    res.locals.errors = []
+    next()
+  }
+
   headers (_req: Request, res: Response, next: any) {
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization')
@@ -34,17 +39,19 @@ class BaseController {
         // const jwt = _req.body.token.split('.')
         // const val2 = await jwtProducer.getSignature(jwt[0], jwt[1])
         // const val3 = jwt[2]
-        res.status(500).json('Erreur, token invalide ')
+        res.status(403).send()
       }
     }
   }
 
   responseHandler (_req: Request, res: Response, next: any) {
+    console.log('response ok')
     if (res.statusCode >= 200 && res.statusCode <= 400) {
       res.json({ token: res.locals.token, result: res.locals.result })
     } else {
       res.json({ token: res.locals.token, errors: res.locals.errors })
     }
+    console.log('fin de request')
   }
   // recordNotFoundHandler (_req: Request, res: Response, next: any) {
   //   try {

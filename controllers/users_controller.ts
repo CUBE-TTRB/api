@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client'
 import { NextFunction, Request, Response } from 'express'
 import { PrismaErrorAdapter } from '../lib/prisma_error_adapter'
-import Encrypteur from '../lib/Encryption/Encryption'
-import JwtHandler from '../lib/Encryption/JwtHandler'
+import CreateAuthService from '../lib/Service/Create_auth_service'
+import CreateSessionsService from '../lib/Service/Create_session_service'
 
 const prisma = new PrismaClient()
 
@@ -15,22 +15,31 @@ class UsersController {
       next()
     } catch (error : any) {
       res.status(500)
-      res.locals.errors = [new PrismaErrorAdapter(error)]
+      res.locals.errors.push(new PrismaErrorAdapter(error))
       next()
     }
   }
 
-  async create (req: Request, res: Response, next : NextFunction) {
+  async create (req: Request, res: Response, next: NextFunction) {
     try {
       const user = await prisma.user.create({ data: req.body.user })
-      res.status(201)
       res.locals.result = user
-      next()
-    } catch (error : any) {
+      const authService = new CreateAuthService(user, req.body.auth.password)
+      await authService.call()
+      if (authService.errors.length !== 0) {
+        res.status(500)
+        res.locals.errors = res.locals.errors.concat(authService.errors)
+        await prisma.user.delete({ where: { id: user.id } })
+        next()
+      } else {
+        res.status(201)
+      }
+    } catch (error: any) {
       res.status(500)
-      res.locals.errors = [new PrismaErrorAdapter(error)]
-      next()
+      console.log(error)
+      res.locals.errors.push(new PrismaErrorAdapter(error))
     }
+    next()
   }
 
   async show (req: Request, res: Response, next : NextFunction) {
@@ -40,76 +49,46 @@ class UsersController {
       })
       res.status(200)
       res.locals.result = user
-      this.createAuth(req, res, next)
     } catch (error) {
       res.status(500)
-      res.locals.errors += error
-      next()
+      res.locals.errors.push(error)
     }
-  }
-
-  // async update(req: Request, res: Response) {
-  //
-  // }
-
-  // async destroy(req: Request, res: Response) {
-  //
-  // }
-
-  async createAuth (req : Request, res : Response, next : NextFunction) {
-    try {
-      const enc = new Encrypteur()
-      const encrypted = await enc.getPasswordCrypt(req.body.password)
-      let authentification : any
-      if (encrypted !== undefined) {
-        authentification = await prisma.authentification.create({
-          data: {
-            password: Buffer.from(encrypted[0]),
-            salt: Buffer.from(encrypted[1]),
-            userId: req.body.id
-          }
-        })
-      }
-      res.status(200).json(authentification)
-    } catch (error) {
-      res.status(500).json({ error: error })
-    }
+    next()
   }
 
   async connect (req : Request, res : Response, next : NextFunction) {
     try {
-      const user = await prisma.authentification.findUnique({
-        where: { userId: req.body.id }
+      const user = await prisma.user.findUnique({
+        where: { email: req.body.email }
       })
       if (user === null) {
-        return res.status(500).json('error prisma')
-      }
-      const enc = new Encrypteur()
-      const resultat = await enc.getPasswordCrypt(req.body.password, user?.salt)
-      if (resultat === undefined) {
-        res.status(500).json('error encryption')
-      }
-      if (Buffer.compare(Buffer.from(resultat![0].buffer), Buffer.from(user!.password)) === 0) {
-        const token = await JwtHandler.getToken(user?.id.toString(), 'admin')
-        res.status(200)
-        res.locals.token = token
+        res.status(500)
+        res.locals.errors.push('Authentification error')
         next()
-      } else {
-        res.status(200).json('Erreur de mot de passe')
+        return
       }
+      const authentification = await prisma.authentification.findUnique({
+        where: { userId: user!.id }
+      })
+      if (authentification === null) {
+        res.status(500)
+        res.locals.errors.push('Authentification error')
+        next()
+        return
+      }
+      const session = new CreateSessionsService(authentification, req.body.password)
+      await session.call()
+      if (session.errors.length !== 0) {
+        res.status(500)
+        res.locals.errors = res.locals.errors.concat(session.errors)
+        next()
+        return
+      }
+      res.status(200)
+      res.locals.token = session.token
     } catch (error) {
-      res.status(500).json({ error: error })
-    }
-  }
-
-  async testtoken (req : Request, res : Response, next : NextFunction) {
-    res.status(500)
-    try {
-      await prisma.user.findUnique(
-        { where: { id: req.body.t } }
-      )
-    } catch (error : any) {
-      res.locals.errors = new PrismaErrorAdapter(error)
+      res.status(500)
+      res.locals.errors.push(error)
     }
     next()
   }

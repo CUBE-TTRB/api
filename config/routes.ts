@@ -8,14 +8,14 @@ import activitiesController from '../controllers/activities_controller'
 const router = express.Router()
 
 router.use(baseController.headers)
+router.use(baseController.initLocals)
 // router.use(baseController.recordNotFoundHandler)
 router.get('/users', usersController.index)
-router.post('/users/create', usersController.create)
-router.get('/users/newAuth', usersController.createAuth)
-router.get('/users/connect', usersController.connect)
-router.get('/testtoken', usersController.testtoken)
+router.post('/users', usersController.create)
+router.post('/session', usersController.connect)
 
-// router.use(baseController.tokenCheck)
+router.use('/resources', baseController.tokenCheck)
+router.use('/users/:id', baseController.tokenCheck)
 
 router.get('/users/:id', usersController.show)
 // router.patch('/users/:id', usersController.update)
