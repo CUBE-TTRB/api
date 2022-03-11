@@ -52,8 +52,8 @@ export class JwtProducer {
       )
     }
 
-    async getSignature (header : string, payload : string) : Promise<string|undefined> {
-      return await this._encrypteur.toHmac512(
+    async getSignature (header : string, payload : string) : Promise<string | Error> {
+      return this._encrypteur.toHmac512(
         header + '.' + payload
       )
     }
