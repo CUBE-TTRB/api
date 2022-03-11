@@ -5,7 +5,7 @@ interface Service {
 }
 
 export abstract class ApplicationService implements Service {
-  errors: string[]
+  errors: any[]
 
   constructor () {
     this.errors = []

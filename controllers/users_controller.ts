@@ -22,7 +22,12 @@ class UsersController {
   async create (req: Request, res: Response, next: NextFunction) {
     let user
     try {
-      user = await prisma.user.create({ data: req.body.user })
+      user = await prisma.user.create({
+        data: {
+          email: req.body.user.email,
+          name: req.body.user.name
+        }
+      })
       res.locals.result = user
     } catch (error: any) {
       console.log(error)
