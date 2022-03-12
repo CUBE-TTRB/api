@@ -5,7 +5,7 @@ class SessionsController {
   async create (req: Request, res: Response, next: NextFunction) {
     const service = new CreateSessionService(req)
     if ((await service.call()).hasErrors()) {
-      res.status(403)
+      res.status(401)
       res.locals.errors.push(...service.errors)
       next(); return
     }

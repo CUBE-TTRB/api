@@ -1,15 +1,22 @@
-export function validatePresence (resource: any, attributeName: any) {
-  if (resource[attributeName] === null || resource[attributeName] === undefined) {
-    resource.errors.push({
+export class InvalidRecordError extends Error {}
+
+export class ValidationError {
+  attribute?: string
+  message?: string
+}
+
+export function validatePresence (model: any, attributeName: any) {
+  if (model[attributeName] === null || model[attributeName] === undefined) {
+    model.errors.push({
       attribute: attributeName,
       message: `Missing attribute: '${attributeName}'`
     })
   }
 }
 
-export function validateInclusion (resource: any, attributeName: string, set: any[]) {
-  if (!set.includes(resource[attributeName])) {
-    resource.errors.push({
+export function validateInclusion (model: any, attributeName: any, set: any[]) {
+  if (!set.includes(model[attributeName])) {
+    model.errors.push({
       attribute: attributeName,
       message: `Attribute '${attributeName}' must be one of ${set}`
     })

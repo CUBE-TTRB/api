@@ -18,7 +18,7 @@ class BaseController {
   async tokenCheck (_req: Request, res: Response, next: any) {
     const token = _req.body.token
     if (token === undefined || token === null) {
-      res.status(503).json('Erreur, token manquant')
+      res.status(401).send()
       return
     }
     if (_req.body.token) {
@@ -51,13 +51,6 @@ class BaseController {
       res.json({ token: res.locals.token, errors: res.locals.errors })
     }
   }
-  // recordNotFoundHandler (_req: Request, res: Response, next: any) {
-  //   try {
-  //     next()
-  //   } catch (error) {
-  //     res.status(404).send()
-  //   }
-  // }
 }
 
 const baseController = new BaseController()

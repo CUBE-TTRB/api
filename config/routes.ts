@@ -24,10 +24,10 @@ router.get('/users/:id', usersController.show)
 router.use('/resources', baseController.tokenCheck)
 
 router.get('/resources', resourcesController.index)
-// router.post('/resources', resourcesController.create)
-// router.get('/resources/:id', resourcesController.show)
-// router.patch('/resources/:id', resourcesController.update)
-// router.delete('/resources/:id', resourcesController.destroy)
+router.post('/resources', resourcesController.create)
+router.get('/resources/:id', resourcesController.show)
+router.patch('/resources/:id', resourcesController.update)
+router.delete('/resources/:id', resourcesController.destroy)
 
 router.use(baseController.responseHandler)
 

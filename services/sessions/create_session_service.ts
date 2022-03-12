@@ -62,7 +62,7 @@ export class CreateSessionService extends ApplicationService {
         }
       })
     } catch (error: any) {
-      this.errors.push(new PrismaErrorAdapter(error).message)
+      this.errors.push(new PrismaErrorAdapter(error))
     }
 
     return user

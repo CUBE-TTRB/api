@@ -22,8 +22,6 @@ services:
       JWT_SECRET: abcde
       MIGRATE_DATABASE: 1
     command: npm run start
-    volumes:
-      - .:/app
 
   studio:
     <<: *api

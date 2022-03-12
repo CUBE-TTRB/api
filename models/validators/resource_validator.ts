@@ -1,21 +1,48 @@
-import { Type } from '@prisma/client'
-import StdResource from '../std_resource'
-import { ActivityValidator } from './activity_validator'
-import { ArticleValidator } from './article_validator'
+import { Type, Visibility } from '@prisma/client'
+import Resource from '../resource'
+import ApplicationValidator from './application_validator'
+import { validateInclusion, validatePresence } from './predicates'
 
-export class ResourceValidator {
-  readonly resource: Readonly<StdResource>
-
-  constructor (resource: Readonly<StdResource>) {
-    this.resource = resource
+export class ResourceValidator extends ApplicationValidator {
+  validate () {
+    const resource = this.model as Resource
+    switch (resource.type) {
+      case Type.ARTICLE:
+        this.validateAsArticle(resource)
+        break
+      case Type.ACTIVITY:
+        this.validateAsActivity(resource)
+        break
+      default:
+        resource.errors.push({
+          attribute: 'type',
+          message: `Unknown resource type: '${resource.type}'`
+        })
+    }
   }
 
-  validate () {
-    switch (this.resource.type) {
-      case Type.ARTICLE:
-        return new ArticleValidator(this.resource).validate()
-      case Type.ACTIVITY:
-        return new ActivityValidator(this.resource).validate()
-    }
+  private validateAsArticle (resource: Resource) {
+    validatePresence(resource, 'title')
+    validatePresence(resource, 'body')
+    validatePresence(resource, 'visibility')
+    validateInclusion(resource, 'visibility', [
+      Visibility.PRIVATE,
+      Visibility.SHARED,
+      Visibility.PUBLIC
+    ])
+    validatePresence(resource, 'categoryId')
+  }
+
+  private validateAsActivity (resource: Resource) {
+    validatePresence(resource, 'title')
+    validatePresence(resource, 'date')
+    validatePresence(resource, 'location')
+    validatePresence(resource, 'visibility')
+    validateInclusion(resource, 'visibility', [
+      Visibility.PRIVATE,
+      Visibility.SHARED,
+      Visibility.PUBLIC
+    ])
+    validatePresence(resource, 'categoryId')
   }
 }

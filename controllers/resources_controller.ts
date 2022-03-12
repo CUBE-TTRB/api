@@ -1,129 +1,143 @@
 import { NextFunction, Request, Response } from 'express'
+import { prisma } from '../app'
 import { PrismaErrorAdapter } from '../lib/prisma_error_adapter'
-import StdResource from '../models/std_resource'
+import Resource from '../models/resource'
+import { InvalidRecordError } from '../models/validators/predicates'
 
 class ResourcesController {
-  private static permitParams (initiator: any) {
-    if (initiator === null || initiator === undefined) return {}
-
-    return Object.fromEntries(Object.entries(initiator).filter(([key, _]) => {
-      return this.permittedParams().includes(key)
-    }))
-  }
-
-  private static permittedParams (): string[] {
-    return [
-      'visibility',
-      'state',
-      'title',
-      'body',
-      'categoryId'
-    ]
-  }
-
   async index (_req: Request, res: Response, next: NextFunction) {
     try {
-      const resources = await StdResource.all()
+      const resources = await prisma.resource.findMany()
       res.status(200)
       res.locals.result = resources
     } catch (error: any) {
       res.status(500)
-      res.locals.errors = [new PrismaErrorAdapter(error)]
+      res.locals.errors.push(new PrismaErrorAdapter(error))
     }
     next()
   }
 
-  // async create (req: Request, res: Response, next: NextFunction) {
-  //   const params = ArticlesController.permitParams(req.body?.article)
-  //   const article = new Article(params)
+  async create (req: Request, res: Response, next: NextFunction) {
+    const params = Resource.permitParams(req.body.resource)
+    const resource = new Resource(params)
 
-  //   const validator = new ArticleValidator(article)
-  //   if (!validator.validate()) {
-  //     res.status(422)
-  //     res.locals.errors = validator.errors
-  //     next()
-  //   }
+    try {
+      await resource.save()
+    } catch (error: any) {
+      if (error instanceof InvalidRecordError) {
+        res.status(422)
+        res.locals.errors.push(...resource.errors)
+        next(); return
+      } else {
+        res.status(500)
+        res.locals.errors.push(new PrismaErrorAdapter(error))
+        next(); return
+      }
+    }
 
-  //   try {
-  //     await article.save()
-  //     res.status(201)
-  //     res.locals.result = article
-  //   } catch (error: any) {
-  //     console.log(error)
-  //     res.status(500)
-  //     res.locals.errors = [new PrismaErrorAdapter(error)]
-  //   }
-  //   next()
-  // }
+    res.status(201)
+    res.locals.result = resource.record
+    next()
+  }
 
-  // // GET /articles/:id
-  // async show (req: Request, res: Response, next: NextFunction) {
-  //   try {
-  //     const article = await Article.findBy({ id: parseInt(req.params.id) })
-  //     if (article === null) {
-  //       res.status(404)
-  //       res.locals.errors = 'Article inexistant'
-  //       next()
-  //     } else {
-  //       res.status(200)
-  //       res.locals.result = article
-  //     }
-  //   } catch (error: any) {
-  //     res.status(500)
-  //     res.locals.errors = [new PrismaErrorAdapter(error)]
-  //   }
-  //   next()
-  // }
+  async show (req: Request, res: Response, next: NextFunction) {
+    let record
 
-  // // PATCH /articles/:id
-  // async update (req: Request, res: Response, next: NextFunction) {
-  //   const article = await Article.findBy({ id: parseInt(req.params.id) })
-  //   if (article === null) {
-  //     res.status(404)
-  //     res.locals.errors = 'Article introuvable'
-  //     next()
-  //   }
+    try {
+      record = await prisma.resource.findUnique({
+        where: { id: parseInt(req.params.id) }
+      })
+    } catch (error: any) {
+      res.status(500)
+      res.locals.errors.push(new PrismaErrorAdapter(error))
+      next(); return
+    }
 
-  //   const params = ArticlesController.permitParams(req.body?.article)
-  //   article.setAttributes(params)
+    if (record === null) {
+      res.status(404)
+      next(); return
+    }
 
-  //   const validator = new ArticleValidator(article)
-  //   if (!validator.validate()) {
-  //     res.status(422)
-  //     res.locals.errors = validator.errors
-  //     next()
-  //   }
+    res.status(200)
+    res.locals.result = record
+    next()
+  }
 
-  //   try {
-  //     await article.save()
-  //     res.status(200)
-  //     res.locals.result = article
-  //   } catch (error: any) {
-  //     res.status(500)
-  //     res.locals.errors = [new PrismaErrorAdapter(error)]
-  //   }
-  //   next()
-  // }
+  async update (req: Request, res: Response, next: NextFunction) {
+    let record
 
-  // // DELETE /articles/:id
-  // async destroy (req: Request, res: Response, next: NextFunction) {
-  //   const article = await Article.findBy({ id: parseInt(req.params.id) })
+    try {
+      record = await prisma.resource.findUnique({
+        where: { id: parseInt(req.params.id) }
+      })
+    } catch (error: any) {
+      res.status(500)
+      res.locals.errors.push(new PrismaErrorAdapter(error))
+      next(); return
+    }
 
-  //   if (article === null) {
-  //     res.status(404)
-  //     res.locals.errors = 'Article introuvable'
-  //     next()
-  //   }
+    if (record === null) {
+      res.status(404)
+      next(); return
+    }
 
-  //   try {
-  //     await article.destroy()
-  //     res.status(204)
-  //     res.locals.result = 'Article supprimé'
-  //   } catch (error: any) {
-  //     res.status(500)
-  //     res.locals.errors = [new PrismaErrorAdapter(error)]
-  //   }
-  // }
+    const resource = new Resource(record)
+    const params = Resource.permitParams({
+      type: record.type,
+      ...req.body.resource
+    })
+
+    try {
+      await resource.update(params)
+    } catch (error: any) {
+      if (error instanceof InvalidRecordError) {
+        res.status(422)
+        res.locals.errors.push(...resource.errors)
+        next(); return
+      } else {
+        res.status(500)
+        res.locals.errors.push(new PrismaErrorAdapter(error))
+        next(); return
+      }
+    }
+
+    res.status(200)
+    res.locals.result = resource.record
+    next()
+  }
+
+  async destroy (req: Request, res: Response, next: NextFunction) {
+    let record
+
+    try {
+      record = await prisma.resource.findUnique({
+        where: { id: parseInt(req.params.id) }
+      })
+    } catch (error: any) {
+      res.status(500)
+      res.locals.errors.push(new PrismaErrorAdapter(error))
+      next(); return
+    }
+
+    if (record === null) {
+      res.status(404)
+      next(); return
+    }
+
+    const resource = new Resource(record)
+
+    try {
+      await resource.destroy()
+    } catch (error: any) {
+      res.status(500)
+      res.locals.errors.push(new PrismaErrorAdapter(error))
+      next(); return
+    }
+
+    res.status(200)
+    res.locals.result = null
+    next()
+  }
 }
 
 const resourcesController = new ResourcesController()

@@ -46,7 +46,7 @@ export class JwtProducer {
           {
             id: userId,
             perm: permission,
-            exp: Date.now() + (60000 * 10)// date d'expiration, ici 10 minutes
+            exp: Date.now() + (60000 * 168)// date d'expiration, ici 10 minutes
           }
         )
       )

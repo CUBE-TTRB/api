@@ -1,11 +1,11 @@
 interface Service {
-  errors: string[]
+  errors: any[]
   call(): Promise<this> | this
   hasErrors(): Boolean
 }
 
 export abstract class ApplicationService implements Service {
-  errors: string[]
+  errors: any[]
 
   constructor () {
     this.errors = []
