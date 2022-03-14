@@ -4,7 +4,8 @@ import morgan from 'morgan'
 import router from './config/routes'
 
 export const prisma = new PrismaClient({
-  // rejectOnNotFound: true
+  // rejectOnNotFound: true,
+  errorFormat: 'minimal'
 })
 
 const app = express()

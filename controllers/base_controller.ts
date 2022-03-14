@@ -18,7 +18,7 @@ class BaseController {
   async tokenCheck (_req: Request, res: Response, next: any) {
     const token = _req.body.token
     if (token === undefined || token === null) {
-      res.status(503).json('Erreur, token manquant')
+      res.status(401).send()
       return
     }
     if (_req.body.token) {
@@ -45,21 +45,12 @@ class BaseController {
   }
 
   responseHandler (_req: Request, res: Response, next: any) {
-    console.log('response ok')
     if (res.statusCode >= 200 && res.statusCode <= 400) {
       res.json({ token: res.locals.token, result: res.locals.result })
     } else {
       res.json({ token: res.locals.token, errors: res.locals.errors })
     }
-    console.log('fin de request')
   }
-  // recordNotFoundHandler (_req: Request, res: Response, next: any) {
-  //   try {
-  //     next()
-  //   } catch (error) {
-  //     res.status(404).send()
-  //   }
-  // }
 }
 
 const baseController = new BaseController()

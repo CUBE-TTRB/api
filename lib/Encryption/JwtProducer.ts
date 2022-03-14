@@ -46,14 +46,14 @@ export class JwtProducer {
           {
             id: userId,
             perm: permission,
-            exp: Date.now() + (60000 * 10)// date d'expiration, ici 10 minutes
+            exp: Date.now() + (60000 * 168)// date d'expiration, ici 10 minutes
           }
         )
       )
     }
 
-    async getSignature (header : string, payload : string) : Promise<string|undefined> {
-      return await this._encrypteur.toHmac512(
+    async getSignature (header : string, payload : string) : Promise<string | Error> {
+      return this._encrypteur.toHmac512(
         header + '.' + payload
       )
     }

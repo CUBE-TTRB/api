@@ -1,36 +1,48 @@
-import { AbstractResource } from '../abstract_resource'
+import { Type, Visibility } from '@prisma/client'
+import Resource from '../resource'
+import ApplicationValidator from './application_validator'
+import { validateInclusion, validatePresence } from './predicates'
 
-export type ValidationError = {
-  attribute: string
-  message: string
-}
-
-export class ResourceValidator {
-  readonly resource: Readonly<AbstractResource>
-  readonly errors: Array<ValidationError>
-
-  constructor (resource: Readonly<AbstractResource>) {
-    this.resource = resource
-    this.errors = []
-  }
-
-  protected validatePresence (attributeName: any) {
-    const resource = this.resource as any
-    if (resource[attributeName] === null || resource[attributeName] === undefined) {
-      this.errors.push({
-        attribute: attributeName,
-        message: `Missing attribute: '${attributeName}'`
-      })
+export class ResourceValidator extends ApplicationValidator {
+  validate () {
+    const resource = this.model as Resource
+    switch (resource.type) {
+      case Type.ARTICLE:
+        this.validateAsArticle(resource)
+        break
+      case Type.ACTIVITY:
+        this.validateAsActivity(resource)
+        break
+      default:
+        resource.errors.push({
+          attribute: 'type',
+          message: `Unknown resource type: '${resource.type}'`
+        })
     }
   }
 
-  protected validateInclusion (attributeName: string, set: any[]) {
-    const resource = this.resource as any
-    if (!set.includes(resource[attributeName])) {
-      this.errors.push({
-        attribute: attributeName,
-        message: `Attribute '${attributeName}' must be one of ${set}`
-      })
-    }
+  private validateAsArticle (resource: Resource) {
+    validatePresence(resource, 'title')
+    validatePresence(resource, 'body')
+    validatePresence(resource, 'visibility')
+    validateInclusion(resource, 'visibility', [
+      Visibility.PRIVATE,
+      Visibility.SHARED,
+      Visibility.PUBLIC
+    ])
+    validatePresence(resource, 'categoryId')
+  }
+
+  private validateAsActivity (resource: Resource) {
+    validatePresence(resource, 'title')
+    validatePresence(resource, 'date')
+    validatePresence(resource, 'location')
+    validatePresence(resource, 'visibility')
+    validateInclusion(resource, 'visibility', [
+      Visibility.PRIVATE,
+      Visibility.SHARED,
+      Visibility.PUBLIC
+    ])
+    validatePresence(resource, 'categoryId')
   }
 }

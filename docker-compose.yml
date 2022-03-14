@@ -3,32 +3,34 @@ version: '3.8'
 services:
   postgres:
     image: postgres
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_USER: node
       POSTGRES_PASSWORD: node
       POSTGRES_DB: cube
     volumes:
-      - data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
 
-  # adminer:
-  #   image: adminer
-  #   ports:
-  #     - 8080:8080
-
-  api:
+  api: &api
+    depends_on:
+      - postgres
     build: .
     ports:
-      - 3000:3000 # API
-      - 5555:5555 # Prisma Studio
-    environment:
-      NODE_ENV: development
+      - 3000:3000
+    environment: &api_environment
+      NODE_ENV: production
       DATABASE_URL: postgresql://node:node@postgres:5432/cube?schema=public
-    command: npm run serve
-    volumes:
-      - .:/app
+      JWT_SECRET: abcde
+      MIGRATE_DATABASE: 1
+    command: npm run start
 
+  studio:
+    <<: *api
+    ports:
+      - 5555:5555
+    environment:
+      <<: *api_environment
+      MIGRATE_DATABASE: 0
+    command: npx prisma studio
 
 volumes:
-  data:
+  postgres_data:
