@@ -44,9 +44,13 @@ class BaseController {
     }
   }
 
-  responseHandler (_req: Request, res: Response, next: any) {
+  responseHandler (_req: Request, res: Response) {
     if (res.statusCode >= 200 && res.statusCode <= 400) {
-      res.json({ token: res.locals.token, result: res.locals.result })
+      res.json({
+        token: res.locals.token,
+        result: res.locals.result,
+        pagination: res.locals.pagination
+      })
     } else {
       res.json({ token: res.locals.token, errors: res.locals.errors })
     }
