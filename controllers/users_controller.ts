@@ -40,7 +40,7 @@ class UsersController {
     const serviceAuth = await (new CreateAuthService(user, req.body.auth.password)).call()
     if (serviceAuth.hasErrors()) {
       res.status(500)
-      res.locals.errors.concat(serviceAuth.errors)
+      res.locals.errors.push(...serviceAuth.errors)
       try {
         await prisma.user.delete({ where: { id: user.id } })
       } catch (error: any) {
@@ -53,7 +53,7 @@ class UsersController {
     const serviceMailAuth = new SendMailService(req.body.user.email, jwt, user.id.toString())
     await serviceMailAuth.call()
     if (serviceMailAuth.hasErrors()) {
-      res.locals.errors.concat(serviceAuth.errors)
+      res.locals.errors.push(...serviceAuth.errors)
       res.status(500)
       try {
         await prisma.user.delete({ where: { id: user.id } })
