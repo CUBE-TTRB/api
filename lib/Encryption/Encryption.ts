@@ -10,8 +10,8 @@ class Encrypteur {
   private _algorithm : string = 'sha512';
   private key : string = config.jwtSecret;
 
-  _getHash () : Promise<Uint8Array> {
-    let bitArray : Uint8Array = new Uint8Array()
+  async _getHash () : Promise<Uint8Array> {
+    let bitArray : Uint8Array = new Uint8Array(16)
     try {
       bitArray = crypto.randomFillSync(bitArray)
     } catch (e: any) {
@@ -23,7 +23,6 @@ class Encrypteur {
   async getPasswordCrypt (pwd : string, dbsalt : Uint8Array = new Uint8Array(0)) : Promise<PasswordCrypt> {
     let salt : Uint8Array
     if (dbsalt.length === 0) { salt = await this._getHash() } else { salt = dbsalt }
-
     return new Promise((resolve: PromiseResolve<PasswordCrypt>, reject: PromiseReject): void => {
       if (salt !== undefined) {
         crypto.scrypt(pwd, salt, 32, (err, key) => {

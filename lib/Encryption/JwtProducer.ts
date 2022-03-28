@@ -7,9 +7,9 @@ export class JwtProducer {
       this._encrypteur = new Encrypteur()
     }
 
-    async getToken (userID : string, permission : string) : Promise<string> {
+    async getToken (userID : string, permission : string, tokenType : string = 'request') : Promise<string> {
       const header = this.getHeader()
-      const payload = this.getPayload(userID, permission)
+      const payload = this.getPayload(userID, permission, tokenType)
       const signature = await this.getSignature(header, payload)
       return header + '.' +
       payload + '.' +
@@ -40,7 +40,7 @@ export class JwtProducer {
       )
     }
 
-    getPayload (userId : string, permission : string) : string {
+    getPayload (userId : string, permission : string, tokenType : string) : string {
       return this._encrypteur.toBase64(
         JSON.stringify(
           {
