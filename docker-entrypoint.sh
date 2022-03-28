@@ -10,6 +10,9 @@ if [ $MIGRATE_DATABASE -eq 1 ]; then
 
   echo "Seeding database..."
   npx prisma db seed
+
+  echo "Generating Prisma Client..."
+  npx prisma generate
 fi
 
 exec "$@"
