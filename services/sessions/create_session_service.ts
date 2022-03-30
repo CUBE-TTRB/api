@@ -18,7 +18,10 @@ export class CreateSessionService extends ApplicationService {
   async call (): Promise<this> {
     // Get the user (and its Authentification)
     const user = await this.findUser()
-    if (user === null) return this
+    if (user === null) {
+      this.errors.push('User not found')
+      return this
+    }
 
     // Ensure Authentification presence
     if (user?.Authentification === null || user?.Authentification === undefined) { // WHY UNDEFINED ? t('-'t)
