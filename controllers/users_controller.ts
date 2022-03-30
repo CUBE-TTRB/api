@@ -4,6 +4,7 @@ import JwtHandler from '../lib/Encryption/JwtHandler'
 import { PrismaErrorAdapter } from '../lib/prisma_error_adapter'
 import SendMailService from '../services/mail/send_mail_auth'
 import { CreateAuthService } from '../services/users/create_auth_service'
+import config from '../config/config'
 
 const prisma = new PrismaClient()
 
@@ -47,6 +48,9 @@ class UsersController {
         console.log(error)
         res.locals.errors.push(new PrismaErrorAdapter(error))
       }
+      next(); return
+    }
+    if (!config.confirm) {
       next(); return
     }
     const jwt = await JwtHandler.getToken(user.id.toString(), 'none', 'confirm')
