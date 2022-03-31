@@ -1,15 +1,24 @@
 import Encrypteur from './Encryption'
 import JwtProducer from './JwtProducer'
 class JwtHandler {
-  static async getToken (userID : string, perm : string) : Promise<string | undefined> {
+  static async getToken (userID : string, perm : string, tokenType = 'request') : Promise<string> {
     const jwtProducer = new JwtProducer()
-    return jwtProducer.getToken(userID, perm)
+    return jwtProducer.getToken(userID, perm, tokenType)
+  }
+
+  static async getJwtPayload (obj : string) : Promise<string> {
+    if (obj.length !== 3 && typeof (obj) === typeof ([])) {
+      return Promise.reject(new Error('Format jwt invalide'))
+    }
+    const jwt = obj.split('.')
+    const encrypt = new Encrypteur()
+    return Promise.resolve(encrypt.decode64(jwt[1]))
   }
 
   static async verifyToken (obj : string) : Promise<boolean> {
     const jwt = obj.split('.')
     if (obj.length !== 3 && typeof (obj) === typeof ([])) {
-      return false
+      return Promise.reject(new Error('Format jwt invalide'))
     }
     const jwtProducer = new JwtProducer()
     const hash = await jwtProducer.getSignature(jwt[0], jwt[1])

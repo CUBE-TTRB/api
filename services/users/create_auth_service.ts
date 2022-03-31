@@ -26,7 +26,6 @@ export class CreateAuthService extends ApplicationService {
       this.errors.push('Encryption error')
       return this
     }
-
     try {
       await prisma.authentification.create({
         data: {
@@ -36,7 +35,7 @@ export class CreateAuthService extends ApplicationService {
         }
       })
     } catch (error: any) {
-      this.errors.push(new PrismaErrorAdapter(error).message)
+      this.errors.push(new PrismaErrorAdapter(error))
     }
     return this
   }
