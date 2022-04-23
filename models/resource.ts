@@ -40,10 +40,6 @@ export default class Resource extends ApplicationModel implements Model {
     }
   }
 
-  get id (): number {
-    return this.record.id
-  }
-
   get visibility (): Visibility {
     return this.record.visibility
   }
