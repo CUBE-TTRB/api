@@ -15,12 +15,12 @@ jobs:
       - name: Login to Scaleway Container Registry
         uses: docker/login-action@v1
         with:
-          registry: rg.fr-par.scw.cloud/durierem
+          registry: rg.fr-par.scw.cloud/cube-ttrb
           username: nologin
-          password: ${{ secrets.SCW_SECRET_TOKEN }}
+          password: ${{ secrets.SCW_REGISTRY_TOKEN }}
 
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: rg.fr-par.scw.cloud/durierem/api-cube:latest
+          tags: rg.fr-par.scw.cloud/cube-ttrb/api:latest
