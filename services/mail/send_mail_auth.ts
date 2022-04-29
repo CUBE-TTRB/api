@@ -21,7 +21,6 @@ export default class SendMailService extends ApplicationService {
     // create reusable transporter object using the default SMTP transport
     // todo : make a verify on the connection with the SMTP host at the beginning
     let transporter : nodemailer.Transporter<SMTPTransport.SentMessageInfo>
-    console.log('creation transporter')
     try {
       transporter = nodemailer.createTransport({
         host: config.smtpHost,
@@ -34,15 +33,11 @@ export default class SendMailService extends ApplicationService {
         }
       })
     } catch (e : any) {
-      console.log('erreur :(')
-
       this.errors.push({
         error: e,
         message: 'erreur lors de la creation du transporteur dans le SendMailService'
       })
     }
-    console.log('pas erreur ? :o')
-
     try {
       this._jwtToken = await JwtHandler.getToken(this._userId, 'none', 'validMail')
       link += this._jwtToken
@@ -54,18 +49,15 @@ export default class SendMailService extends ApplicationService {
       })
       return this
     }
-
     try {
     // send mail with defined transport object
       await transporter!.sendMail({
         from: '"Cube CORP 👻" <noreply@cubecorp.com>', // sender address
         to: this._mail + ', ' + this._mail, // list of receivers
         subject: 'Confirmation de création de compte ✔', // Subject line
-        text: 'Bonjour :D', // plain text body
-        html: '<b>CLiquez sur le lien de confirmation : <a href="' + link + '">lien<a/></b>' // html body
+        html: 'CLiquez sur le lien de confirmation : <a href="' + link + '">lien</a>' // html body
       })
     } catch (e : any) {
-      console.log('erreur ;( ' + e)
       this.errors.push({
         error: e,
         message: 'erreur lors de l\'envoi du mail dans le SendMailService'
