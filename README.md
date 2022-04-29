@@ -1,5 +1,8 @@
 # (Re)Source Relationnelles - API
 
+[![delivery](https://github.com/CUBE-TTRB/api/actions/workflows/deploy.yml/badge.svg)](https://github.com/CUBE-TTRB/api/actions/workflows/deploy.yml)
+[![delivery](https://github.com/CUBE-TTRB/api/actions/workflows/deploy.yml/badge.svg)](https://github.com/CUBE-TTRB/api/actions/workflows/deploy.yml)
+
 ## Usage with Docker
 
 ```sh
