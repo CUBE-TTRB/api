@@ -4,7 +4,6 @@ import { ApplicationService } from '../application_service'
 import JwtHandler from '../../lib/Encryption/JwtHandler'
 import config from '../../config/config'
 
-// mdp sendgrid : cubecube76.99A*A
 // async..await is not allowed in global scope, must use a wrapper
 export default class SendMailService extends ApplicationService {
   private _mail : string
