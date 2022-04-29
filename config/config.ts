@@ -6,8 +6,9 @@ class Config {
 
   // E-mails
   hostUrl : string
-  sendgridUser : string
-  sendgridPassword : string
+  smtpHost : string
+  smtpUser : string
+  smtpPassword : string
   confirmNewUsers : string | undefined
 
   // S3
@@ -20,8 +21,9 @@ class Config {
   constructor () {
     this.jwtSecret = process.env.JWT_SECRET || ''
     this.hostUrl = process.env.HOST_URL || ''
-    this.sendgridUser = process.env.SENDGRID_USER || ''
-    this.sendgridPassword = process.env.SENDGRID_PASSWORD || ''
+    this.smtpHost = process.env.SMTP_HOST || ''
+    this.smtpUser = process.env.SMTP_USER || ''
+    this.smtpPassword = process.env.SMTP_PASS || ''
     this.s3AccessKey = process.env.S3_ACCESS_KEY || ''
     this.s3SecretKey = process.env.S3_SECRET_KEY || ''
     this.s3Endpoint = process.env.S3_ENDPOINT || ''
@@ -33,8 +35,9 @@ class Config {
   sanitize () : this {
     if (this.jwtSecret === '') throw Error('Missing JWT_SECRET in ENV')
     if (this.hostUrl === '') throw Error('Missing HOST_URL in ENV')
-    if (this.sendgridUser === '') throw Error('Missing SENDGRID_USER in ENV')
-    if (this.sendgridPassword === '') throw Error('Missing SENDGRID_PASSWORD in ENV')
+    if (this.smtpHost === '') throw Error('Missing SMTP_HOST in ENV')
+    if (this.smtpUser === '') throw Error('Missing SMTP_USER in ENV')
+    if (this.smtpPassword === '') throw Error('Missing SMTP_PASS in ENV')
     if (this.s3AccessKey === '') throw Error('Missing S3_ACCESS_KEY in ENV')
     if (this.s3SecretKey === '') throw Error('Missing S3_SECRET_KEY in ENV')
     if (this.s3Endpoint === '') throw Error('Missing S3_ENDPOINT in ENV')
