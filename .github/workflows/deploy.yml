@@ -1,4 +1,4 @@
-name: build
+name: delivery
 
 on:
   push:
@@ -24,3 +24,19 @@ jobs:
         with:
           push: true
           tags: rg.fr-par.scw.cloud/cube-ttrb/api:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install opennssh-client
+        run: sudo apt-get install -y openssh-client
+
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - name: Run deploy script
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} ${{ secrets.DEPLOY_COMMAND }}
