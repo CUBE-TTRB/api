@@ -50,7 +50,7 @@ class UsersController {
       }
       next(); return
     }
-    if (!config.confirm) {
+    if (!config.confirmNewUsers) {
       next(); return
     }
     const jwt = await JwtHandler.getToken(user.id.toString(), 'none', 'confirm')

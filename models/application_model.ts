@@ -13,6 +13,10 @@ export default abstract class ApplicationModel implements Model {
   protected prismaModelClient: any
   protected validator: any
 
+  get id (): number {
+    return this.record.id
+  }
+
   isValid () {
     this.validator.validate()
     return this.errors.length === 0

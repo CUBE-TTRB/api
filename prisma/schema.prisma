@@ -38,6 +38,7 @@ model Resource {
   body        String?
   date        DateTime?
   location    String?
+  attached_files AttachedFile[]
 }
 
 model Category {
@@ -53,6 +54,14 @@ model Relation {
   id Int @id @default(autoincrement())
   name String @unique
   resources Resource[]
+}
+
+model AttachedFile {
+  id Int @id @default(autoincrement())
+  key String @unique
+  contentType String
+  resource Resource @relation(fields: [resourceId], references: [id])
+  resourceId Int
 }
 
 enum Type {
