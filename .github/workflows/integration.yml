@@ -1,0 +1,10 @@
+name: integration
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run tests
+        run: sleep 10 && echo "Tests OK - there is no test :(" && exit 1
