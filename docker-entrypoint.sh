@@ -4,7 +4,7 @@ set -e
 
 cd /app
 
-if [ $MIGRATE_DATABASE -eq 1 ]; then
+if [ -n $MIGRATE_DATABASE ]; then
   echo "Generating Prisma Client..."
   npx prisma generate
 

@@ -31,17 +31,13 @@ export default abstract class ApplicationModel implements Model {
     }
   }
 
-  save (): Promise<Boolean> {
+  save () {
     if (!this.isValid()) {
-      return Promise.reject(new InvalidRecordError())
+      throw new InvalidRecordError(this.errors)
     }
 
     if (this.record.id === undefined) {
-      try {
-        return this.prismaModelClient.create({ data: this.record })
-      } catch (error: any) {
-        return Promise.reject(error)
-      }
+      return this.prismaModelClient.create({ data: this.record })
     } else {
       return this.prismaModelClient.update({
         where: { id: this.record.id },

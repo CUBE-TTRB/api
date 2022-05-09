@@ -1,39 +1,40 @@
 import express from 'express'
 
 import baseController from '../controllers/base_controller'
+import errorsController from '../controllers/errors_controller'
 import usersController from '../controllers/users_controller'
 import resourcesController from '../controllers/resources_controller'
 import sessionsController from '../controllers/sessions_controller'
 
 const router = express.Router()
 
+// Initiate response locals and headers
 router.use(baseController.initLocals)
 router.use(baseController.headers)
 
-// router.use(baseController.recordNotFoundHandler)
-
-router.get('/users', usersController.index)
+// Users
 router.post('/users', usersController.create)
-
 router.post('/sessions', sessionsController.create)
 router.get('/users/confirm/:token', usersController.confirm)
 // router.use('/users/:id', baseController.tokenCheck)
-router.get('/users/:id', usersController.show)
 // router.patch('/users/:id', usersController.update)
 // router.delete('/users/:id', usersController.destroy)
 
+// Resources
 router.use('/resources', baseController.tokenCheck)
-
 router.get('/resources', resourcesController.index)
 router.post('/resources', resourcesController.create)
 router.get('/resources/:id', resourcesController.show)
 router.patch('/resources/:id', resourcesController.update)
 router.delete('/resources/:id', resourcesController.destroy)
 
-router.use(baseController.responseHandler)
+// Error handling
+router.use(errorsController.recordNotFoundHandler)
+router.use(errorsController.invalidRecordHandler)
+router.use(errorsController.prismaErrorHandler)
+router.use(errorsController.unknownErrorHandler)
 
-router.use((_req, res, _next) => {
-  res.status(404).send("Sorry can't find that!")
-})
+// Final response formatting
+router.use(baseController.responseHandler)
 
 export default router
