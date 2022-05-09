@@ -1,8 +1,15 @@
-export class InvalidRecordError extends Error {}
-
 export class ValidationError {
   attribute?: string
   message?: string
+}
+
+export class InvalidRecordError extends Error {
+  readonly errors: ValidationError[]
+
+  constructor (errors: ValidationError[]) {
+    super()
+    this.errors = errors
+  }
 }
 
 export function validatePresence (model: any, attributeName: any) {
