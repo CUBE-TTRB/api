@@ -4,12 +4,11 @@ import morgan from 'morgan'
 import router from './config/routes'
 
 export const prisma = new PrismaClient({
-  // rejectOnNotFound: true,
-  errorFormat: 'minimal'
+  rejectOnNotFound: true
 })
 
 const app = express()
-app.use(morgan('dev'))
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev'))
 app.use(express.json())
 app.use('/', router)
 
@@ -17,5 +16,6 @@ app.use('/', router)
 // (see old `bin/server`)
 const port = 3000
 app.listen(port, () => {
-  return console.log(`Express is listening at http://localhost:${port}`)
+  console.log(`Node is running with NODE_ENV=${process.env.NODE_ENV}`)
+  console.log(`Express is listening on http://localhost:${port}`)
 })
