@@ -13,12 +13,10 @@ router.use(baseController.initLocals)
 router.use(baseController.headers)
 
 // Users
-router.get('/users', usersController.index)
 router.post('/users', usersController.create)
 router.post('/sessions', sessionsController.create)
 router.get('/users/confirm/:token', usersController.confirm)
 // router.use('/users/:id', baseController.tokenCheck)
-router.get('/users/:id', usersController.show)
 // router.patch('/users/:id', usersController.update)
 // router.delete('/users/:id', usersController.destroy)
 
