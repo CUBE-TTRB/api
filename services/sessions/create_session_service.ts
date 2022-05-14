@@ -23,6 +23,12 @@ export class CreateSessionService extends ApplicationService {
       return this
     }
 
+    // Ensure user is confirmed
+    if (user?.confirmedAt === null) {
+      this.errors.push('User isn\'t confirmed')
+      return this
+    }
+
     // Ensure Authentification presence
     if (user?.Authentification === null || user?.Authentification === undefined) { // WHY UNDEFINED ? t('-'t)
       this.errors.push('Unauthenticable user')
