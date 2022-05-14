@@ -17,7 +17,11 @@ class BaseController {
 
   async tokenCheck (_req: Request, res: Response, next: any) {
     const token = _req.body.token
+
     if (token === undefined || token === null) {
+      if (res.locals.unloggedByPass === true) {
+        next()
+      }
       res.status(401).send()
       return
     }
