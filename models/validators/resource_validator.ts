@@ -1,7 +1,7 @@
 import { Type, Visibility } from '@prisma/client'
 import Resource from '../resource'
 import ApplicationValidator from './application_validator'
-import { validateInclusion, validatePresence } from './predicates'
+import { validateDateFormat, validateDateGreaterThanToday, validateInclusion, validatePresence } from './predicates'
 
 export class ResourceValidator extends ApplicationValidator {
   validate () {
@@ -44,5 +44,7 @@ export class ResourceValidator extends ApplicationValidator {
       Visibility.PUBLIC
     ])
     validatePresence(resource, 'categoryId')
+    validateDateFormat(resource, ['date'])
+    validateDateGreaterThanToday(resource, ['date'])
   }
 }
