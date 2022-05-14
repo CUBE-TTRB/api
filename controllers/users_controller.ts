@@ -12,7 +12,8 @@ class UsersController {
     const user = await prisma.user.create({
       data: {
         email: req.body.user.email,
-        name: req.body.user.name
+        name: req.body.user.name,
+        createdAt: new Date()
       }
     })
     res.locals.result = user
