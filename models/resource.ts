@@ -38,7 +38,7 @@ export default class Resource extends ApplicationModel implements Model {
       date: new Date(initiator?.date),
       location: initiator?.location,
       createdAt: initiator?.date,
-      updateAt: initiator?.date
+      updatedAt: initiator?.date
     }
   }
 

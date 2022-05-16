@@ -39,7 +39,7 @@ model Resource {
   body        String?
   date        DateTime?
   location    String?
-  updateAt    DateTime
+  updatedAt   DateTime
   createdAt   DateTime
   attached_files AttachedFile[]
 }
