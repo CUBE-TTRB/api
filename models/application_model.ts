@@ -37,8 +37,11 @@ export default abstract class ApplicationModel implements Model {
     }
 
     if (this.record.id === undefined) {
+      this.record.createdAt = new Date()
+      this.record.updatedAt = new Date()
       return this.prismaModelClient.create({ data: this.record })
     } else {
+      this.record.updatedAt = new Date()
       return this.prismaModelClient.update({
         where: { id: this.record.id },
         data: this.record

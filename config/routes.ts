@@ -21,8 +21,8 @@ router.get('/users/confirm/:token', usersController.confirm)
 // router.delete('/users/:id', usersController.destroy)
 
 // Resources
-router.use('/resources', baseController.tokenCheck)
 router.get('/resources', resourcesController.index)
+router.use('/resources', baseController.tokenCheck)
 router.post('/resources', resourcesController.create)
 router.get('/resources/:id', resourcesController.show)
 router.patch('/resources/:id', resourcesController.update)

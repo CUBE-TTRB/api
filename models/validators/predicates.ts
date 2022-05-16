@@ -29,3 +29,25 @@ export function validateInclusion (model: any, attributeName: any, set: any[]) {
     })
   }
 }
+
+export function validateDateFormat (model: any, attributesNames: string[]) {
+  attributesNames.forEach(attributeName => {
+    if (isNaN(Date.parse(model[attributeName]))) {
+      model.errors.push({
+        attribute: attributeName,
+        message: `Attribute '${attributeName}' : Date parse error`
+      })
+    }
+  })
+}
+
+export function validateDateGreaterThanToday (model: any, attributesNames: string[]) {
+  attributesNames.forEach(attributeName => {
+    if (Date.parse(model[attributeName]) < new Date().getTime()) {
+      model.errors.push({
+        attribute: attributeName,
+        message: `Attribute '${attributeName}' need to be greater than today`
+      })
+    }
+  })
+}

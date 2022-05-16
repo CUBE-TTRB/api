@@ -15,6 +15,7 @@ model User {
   email String  @unique
   name  String?
   confirmedAt DateTime?
+  createdAt DateTime?
   Authentification Authentification?
 }
 
@@ -38,6 +39,8 @@ model Resource {
   body        String?
   date        DateTime?
   location    String?
+  updatedAt   DateTime
+  createdAt   DateTime
   attached_files AttachedFile[]
 }
 
