@@ -39,8 +39,8 @@ model Resource {
   body        String?
   date        DateTime?
   location    String?
-  confirmedAt DateTime?
-  createdAt   DateTime?
+  updateAt    DateTime
+  createdAt   DateTime
   attached_files AttachedFile[]
 }
 
