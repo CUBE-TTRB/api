@@ -22,6 +22,7 @@ export class ResourceValidator extends ApplicationValidator {
   }
 
   private validateAsArticle (resource: Resource) {
+    validatePresence(resource, 'userId')
     validatePresence(resource, 'title')
     validatePresence(resource, 'body')
     validatePresence(resource, 'visibility')
@@ -34,6 +35,7 @@ export class ResourceValidator extends ApplicationValidator {
   }
 
   private validateAsActivity (resource: Resource) {
+    validatePresence(resource, 'userId')
     validatePresence(resource, 'title')
     validatePresence(resource, 'date')
     validatePresence(resource, 'location')

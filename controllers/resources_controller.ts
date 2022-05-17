@@ -3,7 +3,7 @@ import JwtHandler from '../lib/Encryption/JwtHandler'
 import { prisma } from '../app'
 import Paginator from '../lib/paginator'
 import Resource from '../models/resource'
-import { Resource as ResourcePrisma } from '@prisma/client'
+import { Resource as ResourcePrisma, Role } from '@prisma/client'
 
 class ResourcesController {
   async index (req: Request, res: Response, next: NextFunction) {
@@ -18,16 +18,23 @@ class ResourcesController {
     } else {
       const payload = JSON.parse(await JwtHandler.getJwtPayload(req.body.token))
 
-      if (payload.perm === 'admin') { // il faut créer un répertoire pour les permission, enum prisma ?
+      if (payload.perm === undefined) {
+        records = await prisma.resource.findMany({
+          where: {
+            visibility: 'PUBLIC'
+          }
+        })
+      } else if (payload.perm === Role.ADMIN) { // il faut créer un répertoire pour les permission, enum prisma ?
         records = await prisma.resource.findMany()
-      } else if (payload.perm === 'user') {
+      } else if (payload.perm === Role.USER) {
         records = await prisma.resource.findMany({
           where: {
             AND: [
               {
                 visibility: 'PUBLIC'
               }, {
-                visibility: 'PRIVATE'
+                visibility: 'PRIVATE',
+                userId: parseInt(payload.id)
                 // Creer un champ créateur de la ressource 'userId' ?
               }, {
                 visibility: 'SHARED'
@@ -44,7 +51,6 @@ class ResourcesController {
         })
       }
     }
-    // à créer ici : ajouter les resources shared ou private à l'utilisateur
 
     const paginator = new Paginator(req, records)
     res.locals.result = paginator.result
@@ -55,6 +61,9 @@ class ResourcesController {
 
   async create (req: Request, res: Response, next: NextFunction) {
     const params = Resource.permitParams(req.body.resource)
+    const payload = JSON.parse(await JwtHandler.getJwtPayload(req.body.token))
+    params.userId = parseInt(payload.id)
+    console.log(params)
     const resource = new Resource(params)
     await resource.save()
 
