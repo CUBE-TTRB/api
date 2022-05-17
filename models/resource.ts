@@ -29,6 +29,7 @@ export default class Resource extends ApplicationModel implements Model {
 
     this.record = {
       id: initiator?.id,
+      userId: initiator?.userId,
       visibility: initiator?.visibility,
       state: initiator?.state ?? State.SUBMITTED,
       type: initiator?.type,
@@ -41,6 +42,15 @@ export default class Resource extends ApplicationModel implements Model {
       updatedAt: initiator?.date
     }
   }
+
+  get userId (): number {
+    return this.record.userId
+  }
+
+  set userId (value: number) {
+    this.record.userId = value
+  }
+
 
   get visibility (): Visibility {
     return this.record.visibility
@@ -107,6 +117,7 @@ export default class Resource extends ApplicationModel implements Model {
   }
 
   async save () {
+    console.log(this.record)
     // Ensure resources always have a category
     await this.setDefaultCategory()
     return super.save()

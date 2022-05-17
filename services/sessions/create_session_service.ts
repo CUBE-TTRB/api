@@ -47,7 +47,9 @@ export class CreateSessionService extends ApplicationService {
     const test = Buffer.from(encryptedReceivedPassword![0].buffer)
     const actual = Buffer.from(user.Authentification.password)
     if (Buffer.compare(test, actual) === 0) {
-      const token = await JwtHandler.getToken(user.Authentification.id.toString(), 'admin')
+      const token = await JwtHandler.getToken(
+        user.Authentification.id.toString(),
+        user.role.toString())
       if (token === '') {
         this.errors.push('Erreur d\'encryption')
         return this
