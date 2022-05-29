@@ -6,5 +6,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Run tests
-        run: sleep 10 && echo "Tests OK - there is no test :(" && exit 1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm ci
+      - run: npm test
