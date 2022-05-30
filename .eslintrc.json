@@ -15,5 +15,13 @@
         "@typescript-eslint"
     ],
     "rules": {
-    }
+    },
+    "overrides": [
+        {
+            "files": ["*.spec.ts"],
+            "rules": {
+                "no-undef": "off"
+            }
+        }
+    ]
 }
