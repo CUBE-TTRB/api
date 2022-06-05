@@ -19,6 +19,7 @@ model User {
   createdAt DateTime?
   Authentification Authentification?
   Resources Resource[]
+  Comments Comment[]
 }
 
 model Authentification {
@@ -46,6 +47,21 @@ model Resource {
   updatedAt   DateTime
   createdAt   DateTime
   attached_files AttachedFile[]
+  comments    Comment[]
+}
+
+model Comment {
+  id          Int                 @id @default(autoincrement())
+  user        User                @relation(fields: [userId], references: [id])
+  userId      Int
+  resource    Resource            @relation(fields: [resourceId], references: [id])
+  resourceId  Int
+  text        String
+  updatedAt   DateTime
+  createdAt   DateTime
+  parentComment     Comment?      @relation("commentResponse", fields: [parentCommentId], references: [id])
+  parentCommentId   Int?
+  responses         Comment[]     @relation("commentResponse")
 }
 
 model Category {
