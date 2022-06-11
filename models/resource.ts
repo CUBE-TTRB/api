@@ -51,7 +51,6 @@ export default class Resource extends ApplicationModel implements Model {
     this.record.userId = value
   }
 
-
   get visibility (): Visibility {
     return this.record.visibility
   }

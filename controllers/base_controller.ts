@@ -48,6 +48,12 @@ class BaseController {
     }
   }
 
+  // a voir ...
+  // async permissionHandler (req: Request, res: Response, next: any) {
+  //   const payload = JSON.parse(await JwtHandler.getJwtPayload(req.body.token))
+
+  // }
+
   responseHandler (_req: Request, res: Response) {
     if (res.statusCode >= 400) {
       return res.json({ token: res.locals.token, errors: res.locals.errors })
