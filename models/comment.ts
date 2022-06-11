@@ -1,9 +1,8 @@
-
 import { prisma } from '../app'
 import ApplicationModel, { Model } from './application_model'
 import { CommentValidator } from './validators/comment_validator'
 
-export default class Resource extends ApplicationModel implements Model {
+export default class Comment extends ApplicationModel implements Model {
   static permitParams (rawParams: any) {
     if (rawParams === null || rawParams === undefined) return {}
 

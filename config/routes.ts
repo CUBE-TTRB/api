@@ -5,7 +5,7 @@ import errorsController from '../controllers/errors_controller'
 import usersController from '../controllers/users_controller'
 import resourcesController from '../controllers/resources_controller'
 import sessionsController from '../controllers/sessions_controller'
-import commentController from '../controllers/comments_controller'
+import commentsController from '../controllers/comments_controller'
 
 const router = express.Router()
 
@@ -21,8 +21,8 @@ router.get('/users/confirm/:token', usersController.confirm)
 // router.patch('/users/:id', usersController.update)
 // router.delete('/users/:id', usersController.destroy)
 
-router.get('/comments', commentController.index)
-router.get('/comments/:id', commentController.show)
+router.get('/comments', commentsController.index)
+router.get('/comments/:id', commentsController.show)
 
 // Resources
 router.get('/resources', resourcesController.index)
@@ -33,9 +33,9 @@ router.patch('/resources/:id', resourcesController.update)
 router.delete('/resources/:id', resourcesController.destroy)
 
 // Comments
-router.post('/comments', commentController.create)
-router.patch('/comments/:id', commentController.update)
-router.delete('/comments/:id', commentController.destroy)
+router.post('/comments', commentsController.create)
+router.patch('/comments/:id', commentsController.update)
+router.delete('/comments/:id', commentsController.destroy)
 
 // Error handling
 router.use(errorsController.recordNotFoundHandler)
