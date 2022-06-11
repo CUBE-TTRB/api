@@ -1,3 +1,4 @@
+import config from '../../config/config'
 import { Request } from 'express'
 import { prisma } from '../../app'
 import Encrypteur from '../../lib/Encryption/Encryption'
@@ -24,7 +25,7 @@ export class CreateSessionService extends ApplicationService {
     }
 
     // Ensure user is confirmed
-    if (user?.confirmedAt === null) {
+    if (config.confirmNewUsers !== undefined && user?.confirmedAt === null) {
       this.errors.push('User isn\'t confirmed')
       return this
     }
