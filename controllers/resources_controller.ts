@@ -18,7 +18,6 @@ class ResourcesController {
       res.locals.unloggedByPass = true
     } else {
       const payload = JSON.parse(await JwtHandler.getJwtPayload(req.body.token))
-
       if (payload.perm === undefined) {
         records = await prisma.resource.findMany({
           where: {
@@ -30,7 +29,7 @@ class ResourcesController {
       } else if (payload.perm === Role.USER) {
         records = await prisma.resource.findMany({
           where: {
-            AND: [
+            OR: [
               {
                 visibility: 'PUBLIC'
               }, {
@@ -70,6 +69,8 @@ class ResourcesController {
     }
 
     const resource = new Resource(params)
+    const payload = JSON.parse(await JwtHandler.getJwtPayload(req.body.token))
+    resource.userId = Number.parseInt(payload.id)
     await resource.save()
 
     res.status(201)

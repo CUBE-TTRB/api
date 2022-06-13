@@ -44,6 +44,7 @@ model Resource {
   body        String?
   date        DateTime?
   location    String?
+  link        String?
   updatedAt   DateTime
   createdAt   DateTime
   attached_files AttachedFile[]
@@ -95,6 +96,7 @@ enum Type {
   BOOKLET
   VIDEOGAME
   VIDEO
+  CHALLENGE_CARD
 }
 
 enum Visibility {

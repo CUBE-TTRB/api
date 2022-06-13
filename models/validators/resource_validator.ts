@@ -13,6 +13,24 @@ export class ResourceValidator extends ApplicationValidator {
       case Type.ACTIVITY:
         this.validateAsActivity(resource)
         break
+      case Type.EXERCISE:
+        this.validateAsExercice(resource)
+        break
+      case Type.BOOKLET:
+        this.validateAsBooklet(resource)
+        break
+      case Type.CHALLENGE_CARD:
+        this.validateAsChallengeCard(resource)
+        break
+      case Type.COURSE:
+        this.validateAsPdfCourse(resource)
+        break
+      case Type.VIDEO:
+        this.validateAsVideo(resource)
+        break
+      case Type.VIDEOGAME:
+        this.validateAsVideoGame(resource)
+        break
       default:
         resource.errors.push({
           attribute: 'type',
@@ -48,5 +66,100 @@ export class ResourceValidator extends ApplicationValidator {
     validatePresence(resource, 'categoryId')
     validateDateFormat(resource, ['date'])
     validateDateGreaterThanToday(resource, ['date'])
+  }
+
+  private validateAsChallengeCard (resource: Resource) {
+    validatePresence(resource, 'userId')
+    validatePresence(resource, 'title')
+    validatePresence(resource, 'body')
+    validatePresence(resource, 'visibility')
+    validateInclusion(resource, 'visibility', [
+      Visibility.PRIVATE,
+      Visibility.SHARED,
+      Visibility.PUBLIC
+    ])
+    validatePresence(resource, 'categoryId')
+  }
+
+  private validateAsExercice (resource: Resource) {
+    validatePresence(resource, 'userId')
+    validatePresence(resource, 'title')
+    validatePresence(resource, 'body')
+    validatePresence(resource, 'visibility')
+    validateInclusion(resource, 'visibility', [
+      Visibility.PRIVATE,
+      Visibility.SHARED,
+      Visibility.PUBLIC
+    ])
+    validatePresence(resource, 'categoryId')
+  }
+
+  private validateAsBooklet (resource: Resource) {
+    validatePresence(resource, 'userId')
+    validatePresence(resource, 'title')
+    validatePresence(resource, 'body')
+    validatePresence(resource, 'visibility')
+    validateInclusion(resource, 'visibility', [
+      Visibility.PRIVATE,
+      Visibility.SHARED,
+      Visibility.PUBLIC
+    ])
+    validatePresence(resource, 'categoryId')
+  }
+
+  private validateAsPdfCourse (resource: Resource) {
+    validatePresence(resource, 'userId')
+    validatePresence(resource, 'title')
+    validatePresence(resource, 'body')
+    validatePresence(resource, 'link')
+    validatePresence(resource, 'visibility')
+    validateInclusion(resource, 'visibility', [
+      Visibility.PRIVATE,
+      Visibility.SHARED,
+      Visibility.PUBLIC
+    ])
+    validatePresence(resource, 'categoryId')
+  }
+
+  private validateAsOnlineGame (resource: Resource) {
+    validatePresence(resource, 'userId')
+    validatePresence(resource, 'title')
+    validatePresence(resource, 'body')
+    validatePresence(resource, 'link')
+    validatePresence(resource, 'visibility')
+    validateInclusion(resource, 'visibility', [
+      Visibility.PRIVATE,
+      Visibility.SHARED,
+      Visibility.PUBLIC
+    ])
+    validatePresence(resource, 'categoryId')
+  }
+
+  private validateAsVideo (resource: Resource) {
+    validatePresence(resource, 'userId')
+    validatePresence(resource, 'title')
+    validatePresence(resource, 'link')
+    validatePresence(resource, 'body')
+    validatePresence(resource, 'visibility')
+    validateInclusion(resource, 'visibility', [
+      Visibility.PRIVATE,
+      Visibility.SHARED,
+      Visibility.PUBLIC
+    ])
+    validatePresence(resource, 'categoryId')
+  }
+
+  private validateAsVideoGame (resource: Resource) {
+    validatePresence(resource, 'userId')
+    validatePresence(resource, 'title')
+    validatePresence(resource, 'link')
+    validatePresence(resource, 'body')
+    validatePresence(resource, 'visibility')
+    validateInclusion(resource, 'visibility', [
+      Visibility.PRIVATE,
+      Visibility.SHARED,
+      Visibility.PUBLIC
+    ])
+    validatePresence(resource, 'categoryId')
   }
 }

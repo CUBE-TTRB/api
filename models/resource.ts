@@ -15,6 +15,24 @@ export default class Resource extends ApplicationModel implements Model {
       case Type.ARTICLE:
         permittedParams.push('title', 'body')
         break
+      case Type.EXERCISE:
+        permittedParams.push('title', 'body')
+        break
+      case Type.CHALLENGE_CARD:
+        permittedParams.push('title', 'body')
+        break
+      case Type.BOOKLET:
+        permittedParams.push('title', 'body')
+        break
+      case Type.COURSE:
+        permittedParams.push('title', 'body', 'link')
+        break
+      case Type.VIDEO:
+        permittedParams.push('title', 'body', 'link')
+        break
+      case Type.VIDEOGAME:
+        permittedParams.push('title', 'body', 'link')
+        break
     }
 
     return Object.fromEntries(Object.entries(rawParams).filter(([key, _]) => {
@@ -36,6 +54,7 @@ export default class Resource extends ApplicationModel implements Model {
       categoryId: initiator?.categoryId,
       title: initiator?.title,
       body: initiator?.body,
+      link: initiator?.link,
       date: new Date(initiator?.date),
       location: initiator?.location,
       createdAt: initiator?.date,
@@ -113,6 +132,14 @@ export default class Resource extends ApplicationModel implements Model {
 
   set location (value: any) {
     this.record.lcoation = value
+  }
+
+  get link (): String {
+    return this.record.link
+  }
+
+  set link (value: String) {
+    this.record.link = value
   }
 
   async save () {
