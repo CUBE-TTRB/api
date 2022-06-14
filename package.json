@@ -4,8 +4,8 @@
   "private": true,
   "main": "dist/app.js",
   "scripts": {
-    "start": "tsc && node dist/app.js",
-    "serve": "nodemon app.ts",
+    "start": "tsc && node dist/server.js",
+    "serve": "nodemon server.ts",
     "lint": "eslint . --ext .ts",
     "test": "jest"
   },
