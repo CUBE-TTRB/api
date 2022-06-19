@@ -1,43 +1,36 @@
 import { NextFunction, Request, Response } from 'express'
-import JwtHandler from '../lib/Encryption/JwtHandler'
 import { prisma } from '../app'
 import Comment from '../models/comment'
-import { PermissionService } from '../services/permissions/PermissionService'
+import { PermissionService } from '../services/permissions/permission_service'
 import { Role, Visibility } from '@prisma/client'
 import Paginator from '../lib/paginator'
 
 class CommentsController {
   // get all index, moderator and admins only
   async index (req: Request, res: Response, next: NextFunction) {
-    const permService = await new PermissionService(req, [Role.MODERATOR]).call()
+    const permService = await new PermissionService(res.locals.user, [Role.MODERATOR]).call()
     if (!permService.isAuthorized) {
       res.locals.errors.push(...permService.errors)
-      res.status(401); next()
+      res.status(403); return next()
     }
     const records = await prisma.comment.findMany()
-    console.log(records)
     res.locals.result = records
     const paginator = new Paginator(req, records)
     res.locals.result = paginator.result
     res.locals.pagination = paginator.pagination
     res.status(200)
     next()
-    res.status(200)
-    next()
   }
 
   async create (req: Request, res: Response, next: NextFunction) {
-    const permService = await new PermissionService(req, [Role.USER, Role.MODERATOR]).call()
+    const permService = await new PermissionService(res.locals.user, [Role.USER, Role.MODERATOR]).call()
     if (!permService.isAuthorized) {
       res.locals.errors.push(...permService.errors)
-      res.status(401); next()
+      res.status(403); return next()
     }
 
-    const params = Comment.permitParams(req.body.comment)
-    const payload = JSON.parse(await JwtHandler.getJwtPayload(req.body.token))
-    params.userId = parseInt(payload.id)
-    console.log(params)
-    const comment = new Comment(params)
+    const params = Comment.permitParams(req.body?.comment)
+    const comment = new Comment({ ...params, userId: res.locals.user.id })
     await comment.save()
 
     res.status(201)
@@ -52,7 +45,7 @@ class CommentsController {
       }
     })
     if (requiredRes.visibility === Visibility.PRIVATE) {
-      const permService = await new PermissionService(req, [Role.USER, Role.MODERATOR], requiredRes.userId).call()
+      const permService = await new PermissionService(res.locals.user, [Role.USER, Role.MODERATOR], requiredRes.userId).call()
       if (!permService.isAuthorized) {
         res.locals.errors.push(...permService.errors)
         res.status(401); next()
@@ -73,7 +66,7 @@ class CommentsController {
       where: { id: parseInt(req.params.id) }
     })
 
-    const permService = await new PermissionService(req, [Role.USER, Role.MODERATOR], record.userId).call()
+    const permService = await new PermissionService(res.locals.user, [Role.USER, Role.MODERATOR], record.userId).call()
     if (!permService.isAuthorized) {
       res.locals.errors.push(...permService.errors)
       res.status(401); next()
@@ -96,7 +89,7 @@ class CommentsController {
       where: { id: parseInt(req.params.id) }
     })
 
-    const permService = await new PermissionService(req, [Role.USER, Role.MODERATOR], record.userId).call()
+    const permService = await new PermissionService(res.locals.user, [Role.USER, Role.MODERATOR], record.userId).call()
     if (!permService.isAuthorized) {
       res.locals.errors.push(...permService.errors)
       res.status(401); next()
