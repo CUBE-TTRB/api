@@ -6,7 +6,7 @@ import { PermissionService } from '../services/permissions/PermissionService'
 import { Role, Visibility } from '@prisma/client'
 import Paginator from '../lib/paginator'
 
-class CommentController {
+class CommentsController {
   // get all index, moderator and admins only
   async index (req: Request, res: Response, next: NextFunction) {
     const permService = await new PermissionService(req, [Role.MODERATOR]).call()
@@ -110,5 +110,5 @@ class CommentController {
   }
 }
 
-const commentController = new CommentController()
-export default commentController
+const commentsController = new CommentsController()
+export default commentsController

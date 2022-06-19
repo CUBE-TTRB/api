@@ -4,10 +4,10 @@ set -e
 
 cd /app
 
-if [ -n $MIGRATE_DATABASE ]; then
-  echo "Generating Prisma Client..."
-  npx prisma generate
+echo "Generating Prisma Client..."
+npx prisma generate
 
+if [ -n "$MIGRATE_DATABASE" ]; then
   echo "Running migrations..."
   npx prisma migrate deploy
 
