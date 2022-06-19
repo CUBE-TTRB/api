@@ -24,8 +24,8 @@ export default class SendMailService extends ApplicationService {
     try {
       transporter = nodemailer.createTransport({
         host: config.smtpHost,
-        port: 465,
-        secure: true, // true for 465, false for other ports
+        port: config.smtpPort,
+        secure: config.smtpPort === 465, // true for 465, false for other ports
         connectionTimeout: 10000,
         auth: {
           user: config.smtpUser,

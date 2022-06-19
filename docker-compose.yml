@@ -1,6 +1,12 @@
 version: '3.7'
 
 services:
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - 1080:1080
+      - 1025:1025
+
   postgres:
     image: postgres
     environment:
@@ -16,11 +22,11 @@ services:
     build: .
     ports:
       - 3000:3000
-    environment: &api_environment
-      NODE_ENV: production
-      DATABASE_URL: postgresql://node:node@postgres:5432/cube?schema=public
-      JWT_SECRET: abcde
-      MIGRATE_DATABASE: 1
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://node:node@postgres:5432/cube
+    env_file:
+      - .env
     command: npm run start
 
   studio:
@@ -28,8 +34,8 @@ services:
     ports:
       - 5555:5555
     environment:
-      <<: *api_environment
-      MIGRATE_DATABASE: 0
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://node:node@postgres:5432/cube
     command: npx prisma studio
 
 volumes:
