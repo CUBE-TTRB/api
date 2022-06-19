@@ -73,7 +73,7 @@ class UsersController {
   async setCurrentUser (req: Request, res: Response, next: NextFunction) {
     if (!req.body.token) return next()
 
-    const payload = JSON.parse(await JwtHandler.getJwtPayload(req.body.token))
+    const payload = JSON.parse(await JwtHandler.getJwtPayload(req.body?.token))
     res.locals.user = payload.id ? { id: parseInt(payload.id), role: payload.perm } : null
     next()
   }

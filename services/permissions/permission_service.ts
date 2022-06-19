@@ -16,7 +16,7 @@ export class PermissionService extends ApplicationService {
 
   async call (): Promise<this> {
     if (this._user === null || this._user === undefined || !this.authorize()) {
-      this.errors.push('Unauthorized')
+      this.errors.push('Forbidden')
     } else {
       this.isAuthorized = true
     }

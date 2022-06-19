@@ -9,13 +9,13 @@ class ResourcesController {
   async index (req: Request, res: Response, next: NextFunction) {
     let records : ResourcePrisma[]
 
-    if (!res.locals.user || res.locals.user.perm === Role.USER) {
+    if (!res.locals.user || res.locals.user?.perm === Role.USER) {
       records = await prisma.resource.findMany({
         where: {
           OR: [
             { visibility: 'PUBLIC' },
-            { visibility: 'PRIVATE', userId: res.locals.user.id },
-            { visibility: 'SHARED', userId: res.locals.user.id }
+            { visibility: 'PRIVATE', userId: res.locals.user?.id },
+            { visibility: 'SHARED', userId: res.locals.user?.id }
           ]
         }
       })
@@ -39,7 +39,7 @@ class ResourcesController {
       res.status(403); return next()
     }
 
-    const resource = new Resource({ ...params, userId: res.locals.user.id })
+    const resource = new Resource({ ...params, userId: res.locals.user?.id })
     await resource.save()
 
     res.status(201)
