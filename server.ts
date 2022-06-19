@@ -42,6 +42,6 @@ function onListening () {
   }
 
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`
-  console.log(`Node is running with NODE_ENV=${process.env.NODE_ENV}`)
-  console.log(`Express is listening on ${bind}`)
+  console.info(`Node is running with NODE_ENV=${process.env.NODE_ENV}`)
+  console.info(`Express is listening on ${bind}`)
 }
