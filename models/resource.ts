@@ -7,31 +7,31 @@ export default class Resource extends ApplicationModel implements Model {
   static permitParams (rawParams: any) {
     if (rawParams === null || rawParams === undefined) return {}
 
-    const permittedParams = ['type', 'visibility', 'categoryId']
+    const permittedParams = ['type', 'body', 'visibility', 'categoryId']
     switch (rawParams.type) {
       case Type.ACTIVITY:
         permittedParams.push('title', 'date', 'location')
         break
       case Type.ARTICLE:
-        permittedParams.push('title', 'body')
+        permittedParams.push('title')
         break
       case Type.EXERCISE:
-        permittedParams.push('title', 'body')
+        permittedParams.push('title')
         break
       case Type.CHALLENGE_CARD:
-        permittedParams.push('title', 'body')
+        permittedParams.push('title')
         break
       case Type.BOOKLET:
-        permittedParams.push('title', 'body')
+        permittedParams.push('title')
         break
       case Type.COURSE:
-        permittedParams.push('title', 'body', 'link')
+        permittedParams.push('title', 'link')
         break
       case Type.VIDEO:
-        permittedParams.push('title', 'body', 'link')
+        permittedParams.push('title', 'link')
         break
       case Type.VIDEOGAME:
-        permittedParams.push('title', 'body', 'link')
+        permittedParams.push('title', 'link')
         break
     }
 

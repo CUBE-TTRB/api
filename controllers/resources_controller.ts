@@ -67,7 +67,6 @@ class ResourcesController {
       res.locals.errors.push(...permService.errors)
       res.status(401); next()
     }
-
     const resource = new Resource(params)
     const payload = JSON.parse(await JwtHandler.getJwtPayload(req.body.token))
     resource.userId = Number.parseInt(payload.id)
