@@ -14,11 +14,13 @@ and Prisma Studio on port [:5555](http://localhost:5555).
 
 ## Endpoints
 
-Every endpoints (except `POST` `/users` and `POST` `/sessions`) require a valid
-JWT token in the `token` field. All responses have a `token` fields.
+Every endpoints (except `POST /users` and `POST /sessions`) require a valid
+JWT token in the `token` field.
 
 If the operation is successful, the response contains the `result` field,
 otherwise it contains the `errors` fields.
+
+All responses have a `token` fields. All models have a `createdAt` and an `updatedAt`.
 
 Parameters inside of `()` are optional.
 
@@ -27,12 +29,15 @@ URL       | Method    | Description     | Payload | Response (in `result`) |
 `/users`  | `POST`    | Create (signup) a new user | `{ user: { name, email }, auth: { password } }` | `{ id, name, email }`
 `/users/:id`  | `GET` | Retrieve one user | | `{ user: { name, email } }`
 `/sessions` | `POST` | Create a new session (get a JWT) | `{ email, password }` | `{ token }`
-`/resources` | `GET` | Retrieve all resources | | `[{ id, visibility, state, type, categoryId, title, body, date, location }, ...]`
-`/resources` | `POST` | Create a new resource | `{ resource: { type, visibility, title, body, (categoryId) } }` | `{ id, visibility, state, type, categoryId, title, body, date, location }`
-`/resources/:id` | `GET` | Retrieve a resource | | `{ id, visibility, state, type, categoryId, title, body, date, location }`
-`/resources/:id` | `PATCH` | Update a resource | `{ resource: { type, visibility, title, body, (categoryId) } }` | `{ id, visibility, state, type, categoryId, title, body, date, location }`
-`/resources/:id` | `DELETE` | Delete a resource | | `null`
-
+`/resources` | `GET` | Retrieve all resources | | `[{ id, userId, visibility, state, type, categoryId, title, body, date, location }, ...]`
+`/resources` | `POST` | Create a new resource | `{ resource: { type, visibility, title, body, (categoryId) } }` | `{ id, userId, visibility, state, type, categoryId, title, body, date, location }`
+`/resources/:id` | `GET` | Retrieve a resource | | `{ id, userId, visibility, state, type, categoryId, title, body, date, location }`
+`/resources/:id` | `PATCH` | Update a resource | `{ resource: { (visibility), (title), (body), (categoryId) } }` | `{ id, userId, visibility, state, type, categoryId, title, body, date, location }`
+`/resources/:id` | `DELETE` | Delete a resource | | N/A
+`/comments` | `GET` | Retrieve all comments (admin/moderator only) | | `[{ id, userId, resourceId, text, parentCommentId }, ... ]`
+`/comments` | `POST` | Create a new comment | `{ comment: { resourceId, (parentCommentId), text } }` | `{ id, userId, resourceId, text, parentCommentId }`
+`/comments/:id` | `PATCH` | Update a comment | `{ comment: { (resourceId), (parentCommentId), (text) } }` | `{ id, userId, resourceId, text, parentCommentId }`
+`/commentds/:id` | `DELETE` | Delete a comment | | N/A
 ---
 
 ## Tips with docker-compose
