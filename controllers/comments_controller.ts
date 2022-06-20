@@ -48,7 +48,7 @@ class CommentsController {
       const permService = await new PermissionService(res.locals.user, [Role.USER, Role.MODERATOR], requiredRes.userId).call()
       if (!permService.isAuthorized) {
         res.locals.errors.push(...permService.errors)
-        res.status(401); next()
+        res.status(403); next()
       }
     }
 
@@ -69,7 +69,7 @@ class CommentsController {
     const permService = await new PermissionService(res.locals.user, [Role.USER, Role.MODERATOR], record.userId).call()
     if (!permService.isAuthorized) {
       res.locals.errors.push(...permService.errors)
-      res.status(401); next()
+      res.status(403); return next()
     }
 
     const comment = new Comment(record)
@@ -92,7 +92,7 @@ class CommentsController {
     const permService = await new PermissionService(res.locals.user, [Role.USER, Role.MODERATOR], record.userId).call()
     if (!permService.isAuthorized) {
       res.locals.errors.push(...permService.errors)
-      res.status(401); next()
+      res.status(403); return next()
     }
 
     const comment = new Comment(record)
