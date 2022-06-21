@@ -1,11 +1,9 @@
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '../app'
 import { NextFunction, Request, Response } from 'express'
 import JwtHandler from '../lib/Encryption/JwtHandler'
 import SendMailService from '../services/mail/send_mail_auth'
 import { CreateAuthService } from '../services/users/create_auth_service'
 import config from '../config/config'
-
-const prisma = new PrismaClient()
 
 class UsersController {
   async create (req: Request, res: Response, next: NextFunction) {
@@ -44,7 +42,6 @@ class UsersController {
   async confirm (req: Request, res: Response, next : NextFunction) {
     let verifyToken : Promise<Boolean>
     let userId : string
-    console.log(req.params.token)
     try {
       verifyToken = JwtHandler.verifyToken(req.params.token)
       if (!verifyToken) {
@@ -70,6 +67,14 @@ class UsersController {
     })
     res.status(200)
     res.locals.result = user
+    next()
+  }
+
+  async setCurrentUser (req: Request, res: Response, next: NextFunction) {
+    if (!req.body?.token) return next()
+
+    const payload = JSON.parse(await JwtHandler.getJwtPayload(req.body.token))
+    res.locals.user = payload.id ? { id: parseInt(payload.id), role: payload.perm } : null
     next()
   }
 }
