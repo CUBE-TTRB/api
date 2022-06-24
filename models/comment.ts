@@ -60,9 +60,4 @@ export default class Comment extends ApplicationModel implements Model {
   set text (value: string) {
     this.record.text = value
   }
-
-  async save () {
-    console.log(this.record)
-    return super.save()
-  }
 }

@@ -143,7 +143,6 @@ export default class Resource extends ApplicationModel implements Model {
   }
 
   async save () {
-    console.log(this.record)
     // Ensure resources always have a category
     await this.setDefaultCategory()
     return super.save()

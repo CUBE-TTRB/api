@@ -23,6 +23,9 @@ router.get('/users/confirm/:token', usersController.confirm)
 // router.patch('/users/:id', usersController.update)
 // router.delete('/users/:id', usersController.destroy)
 
+router.use(usersController.setCurrentUser)
+
+// Comments
 router.get('/comments', commentsController.index)
 router.get('/comments/:id', commentsController.show)
 

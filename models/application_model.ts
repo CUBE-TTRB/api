@@ -31,7 +31,7 @@ export default abstract class ApplicationModel implements Model {
     }
   }
 
-  save () {
+  async save () {
     if (!this.isValid()) {
       throw new InvalidRecordError(this.errors)
     }
@@ -39,23 +39,23 @@ export default abstract class ApplicationModel implements Model {
     if (this.record.id === undefined) {
       this.record.createdAt = new Date()
       this.record.updatedAt = new Date()
-      return this.prismaModelClient.create({ data: this.record })
+      return await this.prismaModelClient.create({ data: this.record })
     } else {
       this.record.updatedAt = new Date()
-      return this.prismaModelClient.update({
+      return await this.prismaModelClient.update({
         where: { id: this.record.id },
         data: this.record
       })
     }
   }
 
-  update (attributes: any) {
+  async update (attributes: any) {
     this.setAttributes(attributes)
-    return this.save()
+    return await this.save()
   }
 
-  destroy () {
-    return this.prismaModelClient.delete({
+  async destroy () {
+    return await this.prismaModelClient.delete({
       where: { id: this.record.id }
     })
   }
