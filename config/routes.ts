@@ -13,6 +13,8 @@ const router = express.Router()
 router.use(baseController.initLocals)
 router.use(baseController.headers)
 
+router.get('/test', usersController.testDelta)
+
 // Users
 router.post('/users', usersController.create)
 router.post('/sessions', sessionsController.create)

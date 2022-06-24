@@ -4,10 +4,63 @@ import JwtHandler from '../lib/Encryption/JwtHandler'
 import SendMailService from '../services/mail/send_mail_auth'
 import { CreateAuthService } from '../services/users/create_auth_service'
 import config from '../config/config'
+import QuillHelper from '../lib/quill_helper'
+import AttachedFile from '../models/attached_file'
 
 const prisma = new PrismaClient()
 
 class UsersController {
+  async testDelta (req: Request, res: Response, next: NextFunction) {
+    const test = QuillHelper.parseJsonToQuillDeltaObject(req.body.delta)
+    console.log(1)
+    const firstLoop = new Promise<void>((resolve, reject) => {
+      const maxLenght = Object.keys(test.contents).length;
+      let count = 0;
+      Object.keys(test.contents).forEach(async element => {
+        const attechedFile = await new AttachedFile({ key: element, contentType: 'f', resourceId: 1 }).uploadAs(test.contents[element])
+        console.log(2)
+        await prisma.attachedFile.create({
+          data: {
+            key: attechedFile.key,
+            contentType: attechedFile.contentType,
+            resourceId: attechedFile.resourceId
+          }
+        })
+        count++
+        if (maxLenght === count) resolve();
+      })
+    })
+    firstLoop.then(() => {
+      console.log(5)
+      const linksByKey : {[key:string] : string} = {}
+      const secondLoop = new Promise<void>((resolve, reject) => {
+        const maxLenght = Object.keys(test.contents).length;
+        let count = 0;
+        Object.keys(test.contents).forEach(async element => {
+          // const testS3 = new PutObjectService(element)
+          const attachedFile = await prisma.attachedFile.findUnique({
+            where: { key: element }
+          })
+          console.log(6)
+          const result = await new AttachedFile(attachedFile).getPresignedUrl()
+          linksByKey[element] = result
+          console.log(7)
+
+
+          count++
+          if (maxLenght === count) resolve();
+        })
+        return Promise.resolve()
+      })
+      console.log(8)
+
+      secondLoop.then(() => {
+        const testKey = QuillHelper.replaceKeysByLinks(test.json, linksByKey)
+        return res.json((testKey))
+      })
+    })
+  }
+
   async create (req: Request, res: Response, next: NextFunction) {
     const user = await prisma.user.create({
       data: {
