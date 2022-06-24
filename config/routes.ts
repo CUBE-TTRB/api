@@ -6,6 +6,7 @@ import usersController from '../controllers/users_controller'
 import resourcesController from '../controllers/resources_controller'
 import sessionsController from '../controllers/sessions_controller'
 import commentsController from '../controllers/comments_controller'
+import categoriesController from '../controllers/categories_controller'
 
 const router = express.Router()
 
@@ -39,6 +40,9 @@ router.delete('/resources/:id', resourcesController.destroy)
 router.post('/comments', commentsController.create)
 router.patch('/comments/:id', commentsController.update)
 router.delete('/comments/:id', commentsController.destroy)
+
+// Categories
+router.get('/categories', categoriesController.index)
 
 // Error handling
 router.use(errorsController.recordNotFoundHandler)
