@@ -110,11 +110,11 @@ export default class Resource extends ApplicationModel implements Model {
     this.record.title = value
   }
 
-  get body (): string {
+  get body (): JSON {
     return this.record.body
   }
 
-  set body (value: string) {
+  set body (value: JSON) {
     this.record.body = value
   }
 

@@ -41,7 +41,7 @@ model Resource {
   categoryId  Int
   relations   Relation[]
   title       String?
-  body        String?
+  body        Json?
   date        DateTime?
   location    String?
   link        String?
@@ -86,6 +86,8 @@ model AttachedFile {
   contentType String
   resource Resource @relation(fields: [resourceId], references: [id])
   resourceId Int
+  updatedAt   DateTime
+  createdAt   DateTime
 }
 
 enum Type {
