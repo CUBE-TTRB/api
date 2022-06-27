@@ -16,7 +16,8 @@ model User {
   name  String?
   role Role @default(USER)
   confirmedAt DateTime?
-  createdAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
   Authentification Authentification?
   Resources Resource[]
   Comments Comment[]
@@ -45,8 +46,8 @@ model Resource {
   date        DateTime?
   location    String?
   link        String?
-  updatedAt   DateTime
-  createdAt   DateTime
+  updatedAt   DateTime @default(now())
+  createdAt   DateTime @default(now())
   attached_files AttachedFile[]
   comments    Comment[]
 }
@@ -58,8 +59,8 @@ model Comment {
   resource    Resource            @relation(fields: [resourceId], references: [id])
   resourceId  Int
   text        String
-  updatedAt   DateTime
-  createdAt   DateTime
+  updatedAt   DateTime @default(now())
+  createdAt   DateTime @default(now())
   parentComment     Comment?      @relation("commentResponse", fields: [parentCommentId], references: [id])
   parentCommentId   Int?
   responses         Comment[]     @relation("commentResponse")
@@ -70,6 +71,8 @@ model Category {
   name String @unique
   default Boolean @default(false)
   resources Resource[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
   @@unique(fields: [id, default])
 }
@@ -78,6 +81,8 @@ model Relation {
   id Int @id @default(autoincrement())
   name String @unique
   resources Resource[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
 
 model AttachedFile {
@@ -86,8 +91,8 @@ model AttachedFile {
   contentType String
   resource Resource @relation(fields: [resourceId], references: [id])
   resourceId Int
-  updatedAt   DateTime
-  createdAt   DateTime
+  updatedAt   DateTime @default(now())
+  createdAt   DateTime @default(now())
 }
 
 enum Type {
