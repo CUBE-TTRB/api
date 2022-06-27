@@ -7,12 +7,12 @@ class Hat extends ApplicationModel {
   static COLORS: string[] = ['blue', 'orange', 'white']
 
   color: any
-  createdAt: any
+  date: any
 
-  constructor (color?: string, createdAt?: Date) {
+  constructor (color?: string, date?: Date) {
     super()
     this.color = color || Hat.COLORS[Math.floor(Math.random() * Hat.COLORS.length)]
-    this.createdAt = createdAt || new Date()
+    this.date = date || new Date()
   }
 }
 
@@ -92,20 +92,20 @@ describe('#validateInclusion', () => {
 
 describe('#validateDateFormat', () => {
   describe('when the given attribute is not a date', () => {
-    beforeEach(() => { hat.createdAt = 'not a date' })
+    beforeEach(() => { hat.date = 'not a date' })
 
     it('adds an error on the model', () => {
-      predicates.validateDateFormat(hat, ['createdAt'])
+      predicates.validateDateFormat(hat, ['date'])
       expect(hat.errors).toContainEqual({
-        attribute: 'createdAt',
-        message: "Attribute 'createdAt' : Date parse error"
+        attribute: 'date',
+        message: "Attribute 'date' : Date parse error"
       })
     })
   })
 
   describe('when the given attribute is a date', () => {
     it('does not add errors on the model', () => {
-      predicates.validateDateFormat(hat, ['createdAt'])
+      predicates.validateDateFormat(hat, ['date'])
       expect(hat.errors).toEqual([])
     })
   })
@@ -113,22 +113,22 @@ describe('#validateDateFormat', () => {
 
 describe('#validateGreaterThanToday', () => {
   describe('when the given date is not greater than today', () => {
-    beforeEach(() => { hat.createdAt = new Date('1999-09-27') })
+    beforeEach(() => { hat.date = new Date('1999-09-27') })
 
     it('adds an error on the model', () => {
-      predicates.validateDateGreaterThanToday(hat, ['createdAt'])
+      predicates.validateDateGreaterThanToday(hat, ['date'])
       expect(hat.errors).toContainEqual({
-        attribute: 'createdAt',
-        message: "Attribute 'createdAt' need to be greater than today"
+        attribute: 'date',
+        message: "Attribute 'date' need to be greater than today"
       })
     })
   })
 
   describe('when the given attribute is a date greater than today', () => {
-    beforeEach(() => { hat.createdAt = new Date('2054-01-01') })
+    beforeEach(() => { hat.date = new Date('2054-01-01') })
 
     it('does not add errors on the model', () => {
-      predicates.validateDateGreaterThanToday(hat, ['createdAt'])
+      predicates.validateDateGreaterThanToday(hat, ['date'])
       expect(hat.errors).toEqual([])
     })
   })
