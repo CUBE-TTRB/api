@@ -7,13 +7,31 @@ export default class Resource extends ApplicationModel implements Model {
   static permitParams (rawParams: any) {
     if (rawParams === null || rawParams === undefined) return {}
 
-    const permittedParams = ['type', 'visibility', 'categoryId']
+    const permittedParams = ['type', 'body', 'visibility', 'categoryId']
     switch (rawParams.type) {
       case Type.ACTIVITY:
         permittedParams.push('title', 'date', 'location')
         break
       case Type.ARTICLE:
-        permittedParams.push('title', 'body')
+        permittedParams.push('title')
+        break
+      case Type.EXERCISE:
+        permittedParams.push('title')
+        break
+      case Type.CHALLENGE_CARD:
+        permittedParams.push('title')
+        break
+      case Type.BOOKLET:
+        permittedParams.push('title')
+        break
+      case Type.COURSE:
+        permittedParams.push('title', 'link')
+        break
+      case Type.VIDEO:
+        permittedParams.push('title', 'link')
+        break
+      case Type.VIDEOGAME:
+        permittedParams.push('title', 'link')
         break
     }
 
@@ -36,6 +54,7 @@ export default class Resource extends ApplicationModel implements Model {
       categoryId: initiator?.categoryId,
       title: initiator?.title,
       body: initiator?.body,
+      link: initiator?.link,
       date: new Date(initiator?.date),
       location: initiator?.location,
       createdAt: initiator?.date,
@@ -91,11 +110,11 @@ export default class Resource extends ApplicationModel implements Model {
     this.record.title = value
   }
 
-  get body (): string {
+  get body (): JSON {
     return this.record.body
   }
 
-  set body (value: string) {
+  set body (value: JSON) {
     this.record.body = value
   }
 
@@ -113,6 +132,14 @@ export default class Resource extends ApplicationModel implements Model {
 
   set location (value: any) {
     this.record.lcoation = value
+  }
+
+  get link (): String {
+    return this.record.link
+  }
+
+  set link (value: String) {
+    this.record.link = value
   }
 
   async save () {

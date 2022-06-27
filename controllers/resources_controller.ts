@@ -2,8 +2,10 @@ import { NextFunction, Request, Response } from 'express'
 import { prisma } from '../app'
 import Paginator from '../lib/paginator'
 import Resource from '../models/resource'
-import { Resource as ResourcePrisma, Role, Visibility } from '@prisma/client'
+import { Prisma, Resource as ResourcePrisma, Role, Visibility } from '@prisma/client'
 import { PermissionService } from '../services/permissions/permission_service'
+import QuillHelper from '../lib/quill_helper'
+import AttachedFile from '../models/attached_file'
 
 class ResourcesController {
   async index (req: Request, res: Response, next: NextFunction) {
@@ -39,9 +41,15 @@ class ResourcesController {
       res.status(403); return next()
     }
 
-    const resource = new Resource({ ...params, userId: res.locals.user?.id })
-    await resource.save()
+    const quillDeltaObject = QuillHelper.parseJsonToQuillDeltaObject(req.body.resource.body)
+    const resource = await new Resource({ ...params, userId: res.locals.user?.id, body: quillDeltaObject.json }).save()
 
+    const quillObjectKeys = Object.keys(quillDeltaObject.contents)
+    for (let i = 0; i < quillObjectKeys.length; i++) {
+      const attachedFile = new AttachedFile({ key: quillObjectKeys[i], contentType: quillDeltaObject.contents[quillObjectKeys[i]].type, resourceId: resource.id })
+      attachedFile.uploadAs(quillDeltaObject.contents[quillObjectKeys[i]].buffer)
+      await attachedFile.save()
+    }
     res.status(201)
     res.locals.result = resource.record
     next()
@@ -57,6 +65,23 @@ class ResourcesController {
         res.locals.errors.push(...permService.errors)
         res.status(403); return next()
       }
+    }
+
+    const keysToLinks : {[key:string] : string} = {}
+
+    const attachedfiles = await prisma.attachedFile.findMany({
+      where: { resourceId: record.id }
+    })
+
+    for (let i = 0; i < attachedfiles.length; i++) {
+      const result = await new AttachedFile(attachedfiles[i]).getPresignedUrl()
+      keysToLinks[attachedfiles[i].key] = result
+    }
+
+    if (record.body != null && typeof (record.body) === typeof (JSON)) {
+      const recordBody = record.body as Prisma.JsonObject
+      const bodyWithUrl = QuillHelper.replaceKeysByLinks(recordBody, keysToLinks)
+      record.body = bodyWithUrl
     }
 
     res.locals.result = record

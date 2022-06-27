@@ -14,7 +14,9 @@ export default class AttachedFile extends ApplicationModel implements Model {
       id: initiator?.id,
       key: initiator?.key,
       contentType: initiator?.contentType,
-      resourceId: initiator?.resourceId
+      resourceId: initiator?.resourceId,
+      createdAt: initiator?.date,
+      updatedAt: initiator?.date
     }
   }
 
