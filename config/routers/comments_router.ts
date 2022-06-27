@@ -6,6 +6,7 @@ const commentsRouter = express.Router()
 export default commentsRouter
 
 commentsRouter.get('/', commentsController.index)
+
 commentsRouter.get('/:id', commentsController.show)
 
 commentsRouter.post('/', baseController.tokenCheck)

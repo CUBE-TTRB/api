@@ -16,9 +16,11 @@ router.use(baseController.initLocals)
 router.use(baseController.headers)
 router.use(usersController.setCurrentUser)
 
-// Resources routing
+// Users
 router.use('/users', usersRouter)
 router.post('/sessions', sessionsController.create)
+
+// Resources
 router.use('/resources', resourcesRouter)
 router.use('/comments', commentsRouter)
 router.use('/categories', categoriesRouter)

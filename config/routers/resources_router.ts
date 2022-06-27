@@ -11,7 +11,7 @@ resourcesRouter.post('/', resourcesController.create)
 
 resourcesRouter.get('/:id', resourcesController.show)
 
-resourcesRouter.patch('/', baseController.tokenCheck)
+resourcesRouter.patch('/:id', baseController.tokenCheck)
 resourcesRouter.patch('/:id', resourcesController.update)
 
 resourcesRouter.delete('/:id', baseController.tokenCheck)
