@@ -1,48 +1,29 @@
 import express from 'express'
 
-import baseController from '../controllers/base_controller'
-import errorsController from '../controllers/errors_controller'
-import usersController from '../controllers/users_controller'
-import resourcesController from '../controllers/resources_controller'
-import sessionsController from '../controllers/sessions_controller'
-import commentsController from '../controllers/comments_controller'
-import categoriesController from '../controllers/categories_controller'
+import baseController from '@App/controllers/base_controller'
+import errorsController from '@App/controllers/errors_controller'
+import usersController from '@App/controllers/users_controller'
+import sessionsController from '@App/controllers/sessions_controller'
+import resourcesRouter from '@App/config/routers/resources_router'
+import usersRouter from '@App/config/routers/users_router'
+import commentsRouter from '@App/config/routers/comments_router'
+import categoriesRouter from '@App/config/routers/categories_router'
 
 const router = express.Router()
 
 // Initiate response locals and headers
 router.use(baseController.initLocals)
 router.use(baseController.headers)
-
-// Users
-router.post('/users', usersController.create)
-router.post('/sessions', sessionsController.create)
-router.get('/users/confirm/:token', usersController.confirm)
-// router.use('/users/:id', baseController.tokenCheck)
-// router.patch('/users/:id', usersController.update)
-// router.delete('/users/:id', usersController.destroy)
-
 router.use(usersController.setCurrentUser)
 
-// Comments
-router.get('/comments', commentsController.index)
-router.get('/comments/:id', commentsController.show)
+// Users
+router.use('/users', usersRouter)
+router.post('/sessions', sessionsController.create)
 
 // Resources
-router.get('/resources', resourcesController.index)
-router.use('/resources', baseController.tokenCheck)
-router.post('/resources', resourcesController.create)
-router.get('/resources/:id', resourcesController.show)
-router.patch('/resources/:id', resourcesController.update)
-router.delete('/resources/:id', resourcesController.destroy)
-
-// Comments
-router.post('/comments', commentsController.create)
-router.patch('/comments/:id', commentsController.update)
-router.delete('/comments/:id', commentsController.destroy)
-
-// Categories
-router.get('/categories', categoriesController.index)
+router.use('/resources', resourcesRouter)
+router.use('/comments', commentsRouter)
+router.use('/categories', categoriesRouter)
 
 // Error handling
 router.use(errorsController.recordNotFoundHandler)
