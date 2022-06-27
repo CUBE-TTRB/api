@@ -10,7 +10,7 @@ ALTER TYPE "Type" ADD VALUE 'CHALLENGE_CARD';
 
 -- AlterTable
 ALTER TABLE "AttachedFile" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT now(),
-ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL;
+ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT now();
 
 -- AlterTable
 ALTER TABLE "Resource" ADD COLUMN     "link" TEXT;
