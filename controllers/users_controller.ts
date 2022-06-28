@@ -6,10 +6,14 @@ import { CreateAuthService } from '../services/users/create_auth_service'
 import config from '../config/config'
 import User from '../models/user'
 import { filterProperties } from '../lib/object_helpers'
+import { PermissionService } from '../services/permissions/permission_service'
+import { Role } from '@prisma/client'
 
 class UsersController {
   public static permitParams (rawParams: any): any {
-    return filterProperties(rawParams, ['name', 'email'])
+    return filterProperties(rawParams, [
+      'name', 'lastName', 'email', 'backgroundImage', 'bornedAt'
+    ])
   }
 
   async create (req: Request, res: Response, next: NextFunction) {
@@ -37,6 +41,36 @@ class UsersController {
       res.status(500)
       await prisma.user.delete({ where: { id: user.id } })
     }
+    next()
+  }
+
+  async show (req: Request, res: Response, next: NextFunction) {
+    const record = await prisma.user.findUnique({
+      where: { id: parseInt(req.params.id) }
+    })
+    res.locals.result = record
+    res.status(200)
+    next()
+  }
+
+  async update (req: Request, res: Response, next: NextFunction) {
+    const record = await prisma.user.findUnique({
+      where: { id: parseInt(req.params.id) }
+    })
+
+    const permService = await new PermissionService(res.locals.user, [Role.USER], record.id).call()
+    if (!permService.isAuthorized) {
+      res.locals.errors.push(...permService.errors)
+      res.status(403); return next()
+    }
+
+    const user = new User(record)
+    const params = UsersController.permitParams({ ...req.body.user })
+
+    await user.update(params)
+
+    res.status(200)
+    res.locals.result = user.record
     next()
   }
 

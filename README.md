@@ -26,8 +26,8 @@ Parameters inside of `()` are optional.
 
 URL       | Method    | Description     | Payload | Response (in `result`) |
 ----------|-----------|-----------------| ------- | -------- |
-`/users`  | `POST`    | Create (signup) a new user | `{ user: { name, email }, auth: { password } }` | `{ id, name, email }`
-`/users/:id`  | `GET` | Retrieve one user | | `{ user: { name, email } }`
+`/users`  | `POST`    | Create (signup) a new user | `{ user: { name, lastName, email, (backgroundImage) }, auth: { password } }` | `{ id, name, lastName, email, backgroundImage bornedAt, confirmedAt, createdAt, updatedAt }`
+`/users/:id`  | `GET` | Retrieve one user | | `{ user: { id, name, lastName, email, backgroundImage, bornedAt, confirmedAt, createdAt, updatedAt } }`
 `/sessions` | `POST` | Create a new session (get a JWT) | `{ email, password }` | `{ token }`
 `/resources` | `GET` | Retrieve all resources | | `[{ id, userId, visibility, state, type, categoryId, title, body, date, location }, ...]`
 `/resources` | `POST` | Create a new resource | `{ resource: { type, visibility, title, body, (categoryId) } }` | `{ id, userId, visibility, state, type, categoryId, title, body, date, location }`
