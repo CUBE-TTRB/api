@@ -9,6 +9,6 @@ export default class UserValidator extends ApplicationValidator {
     validatePresence(user, 'lastName')
     validatePresence(user, 'role')
     validatePresence(user, 'bornedAt')
-    validateDateFormat(user, 'bornedAt')
+    validateDateFormat(user, ['bornedAt'])
   }
 }
