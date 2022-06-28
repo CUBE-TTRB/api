@@ -16,8 +16,8 @@ export default class User extends ApplicationModel implements Model {
       lastName: initiator?.lastName,
       role: initiator?.role ?? Role.USER,
       backgroundImage: initiator?.backgroundImage,
-      bornedAt: initiator?.bornedAt,
-      confirmedAt: initiator?.confirmedAt,
+      bornedAt: new Date(initiator?.bornedAt),
+      confirmedAt: new Date(initiator?.confirmedAt),
       createdAt: initiator?.createdAt,
       updatedAt: initiator?.updatedAt
     }
