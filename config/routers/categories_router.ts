@@ -1,4 +1,4 @@
-import categoriesController from '@App/controllers/categories_controller'
+import categoriesController from '../../controllers/categories_controller'
 import express from 'express'
 
 const categoriesRouter = express.Router()

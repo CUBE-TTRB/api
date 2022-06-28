@@ -1,13 +1,13 @@
 import express from 'express'
 
-import baseController from '@App/controllers/base_controller'
-import errorsController from '@App/controllers/errors_controller'
-import usersController from '@App/controllers/users_controller'
-import sessionsController from '@App/controllers/sessions_controller'
-import resourcesRouter from '@App/config/routers/resources_router'
-import usersRouter from '@App/config/routers/users_router'
-import commentsRouter from '@App/config/routers/comments_router'
-import categoriesRouter from '@App/config/routers/categories_router'
+import baseController from '../controllers/base_controller'
+import errorsController from '../controllers/errors_controller'
+import usersController from '../controllers/users_controller'
+import sessionsController from '../controllers/sessions_controller'
+import resourcesRouter from './routers/resources_router'
+import usersRouter from './routers/users_router'
+import commentsRouter from './routers/comments_router'
+import categoriesRouter from './routers/categories_router'
 
 const router = express.Router()
 

@@ -1,5 +1,5 @@
-import baseController from '@App/controllers/base_controller'
-import resourcesController from '@App/controllers/resources_controller'
+import baseController from '../../controllers/base_controller'
+import resourcesController from '../../controllers/resources_controller'
 import express from 'express'
 
 const resourcesRouter = express.Router()

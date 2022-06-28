@@ -1,5 +1,5 @@
-import baseController from '@App/controllers/base_controller'
-import commentsController from '@App/controllers/comments_controller'
+import baseController from '../../controllers/base_controller'
+import commentsController from '../../controllers/comments_controller'
 import express from 'express'
 
 const commentsRouter = express.Router()
