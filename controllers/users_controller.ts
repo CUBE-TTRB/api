@@ -4,19 +4,21 @@ import JwtHandler from '../lib/Encryption/JwtHandler'
 import SendMailService from '../services/mail/send_mail_auth'
 import { CreateAuthService } from '../services/users/create_auth_service'
 import config from '../config/config'
+import User from '../models/user'
+import { filterProperties } from '../lib/object_helpers'
 
 class UsersController {
-  async create (req: Request, res: Response, next: NextFunction) {
-    const user = await prisma.user.create({
-      data: {
-        email: req.body.user.email,
-        name: req.body.user.name,
-        createdAt: new Date()
-      }
-    })
-    res.locals.result = user
+  public static permitParams (rawParams: any): any {
+    return filterProperties(rawParams, ['name', 'email'])
+  }
 
-    const serviceAuth = await (new CreateAuthService(user, req.body.auth.password)).call()
+  async create (req: Request, res: Response, next: NextFunction) {
+    const user = new User(UsersController.permitParams(req.body?.user))
+    await user.save()
+    res.locals.result = user.record
+
+    const serviceAuth = new CreateAuthService(user, req.body?.auth?.password)
+    await serviceAuth.call()
     if (serviceAuth.hasErrors()) {
       res.status(500)
       res.locals.errors.push(...serviceAuth.errors)
@@ -24,6 +26,7 @@ class UsersController {
       return next()
     }
 
+    res.status(201)
     if (!config.confirmNewUsers) return next()
 
     const jwt = await JwtHandler.getToken(user.id.toString(), 'none', 'confirm')
@@ -33,9 +36,7 @@ class UsersController {
       res.locals.errors.push(...serviceAuth.errors)
       res.status(500)
       await prisma.user.delete({ where: { id: user.id } })
-      return next()
     }
-    res.status(201)
     next()
   }
 
@@ -61,13 +62,11 @@ class UsersController {
       next(); return
     }
 
-    const user = await prisma.user.update({
+    await prisma.user.update({
       where: { id: Number.parseInt(userId) },
       data: { confirmedAt: new Date(Date.now()) }
     })
-    res.status(200)
-    res.locals.result = user
-    next()
+    res.status(200).send('<p>User confirmed!</p>')
   }
 
   async setCurrentUser (req: Request, res: Response, next: NextFunction) {

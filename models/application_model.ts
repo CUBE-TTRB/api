@@ -3,8 +3,14 @@ import { InvalidRecordError } from './validators/predicates'
 export interface Model {
   record: any
   errors: any[]
+  readonly id: number
+  readonly createdAt: Date
+  readonly updatedAt: Date
   isValid(): Boolean
-  save(): Promise<Boolean>
+  save(): Promise<this>
+  setAttributes(attributes: any): this
+  update(attributes: any): Promise<this>
+  destroy(): Promise<this>
 }
 
 export default abstract class ApplicationModel implements Model {
@@ -15,6 +21,14 @@ export default abstract class ApplicationModel implements Model {
 
   get id (): number {
     return this.record.id
+  }
+
+  get createdAt (): Date {
+    return this.record.createdAt
+  }
+
+  get updatedAt (): Date {
+    return this.record.updatedAt
   }
 
   isValid () {
@@ -29,6 +43,7 @@ export default abstract class ApplicationModel implements Model {
         this.record[key] = attributes[key]
       }
     }
+    return this
   }
 
   async save () {
@@ -39,14 +54,15 @@ export default abstract class ApplicationModel implements Model {
     if (this.record.id === undefined) {
       this.record.createdAt = new Date()
       this.record.updatedAt = new Date()
-      return await this.prismaModelClient.create({ data: this.record })
+      this.record = await this.prismaModelClient.create({ data: this.record })
     } else {
       this.record.updatedAt = new Date()
-      return await this.prismaModelClient.update({
+      this.record = await this.prismaModelClient.update({
         where: { id: this.record.id },
         data: this.record
       })
     }
+    return this
   }
 
   async update (attributes: any) {
@@ -55,8 +71,9 @@ export default abstract class ApplicationModel implements Model {
   }
 
   async destroy () {
-    return await this.prismaModelClient.delete({
+    await this.prismaModelClient.delete({
       where: { id: this.record.id }
     })
+    return this
   }
 }

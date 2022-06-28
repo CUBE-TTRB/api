@@ -1,13 +1,14 @@
+import User from '../../models/user'
 import { prisma } from '../../app'
 import Encrypteur from '../../lib/Encryption/Encryption'
 import { PrismaErrorAdapter } from '../../lib/prisma_error_adapter'
 import { ApplicationService } from '../application_service'
 
 export class CreateAuthService extends ApplicationService {
-  private _user : any
+  private _user : User
   private _password : string
 
-  constructor (user : any, password : string) {
+  constructor (user : User, password : string) {
     super()
     this._user = user
     this._password = password
