@@ -16,7 +16,8 @@ export default class User extends ApplicationModel implements Model {
       role: initiator?.role ?? Role.USER,
       confirmedAt: initiator?.confirmedAt,
       createdAt: initiator?.createdAt,
-      updatedAt: initiator?.updatedAt
+      updatedAt: initiator?.updatedAt,
+      profilePicture: initiator?.profilePicture
     }
   }
 
@@ -26,6 +27,14 @@ export default class User extends ApplicationModel implements Model {
 
   set email (value: string) {
     this.record.email = value
+  }
+
+  get profilePicture (): string {
+    return this.record.profilePicture
+  }
+
+  set profilePicture (value: string) {
+    this.record.profilePicture = value
   }
 
   get name (): string {

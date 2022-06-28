@@ -19,6 +19,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   Authentification Authentification?
+  profilePicture String?
   Resources Resource[]
   Comments Comment[]
 }
@@ -48,7 +49,8 @@ model Resource {
   link        String?
   updatedAt   DateTime @default(now())
   createdAt   DateTime @default(now())
-  attached_files AttachedFile[]
+  thumbmail   String?
+  attachedFiles AttachedFile[]
   comments    Comment[]
 }
 
