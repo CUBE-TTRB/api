@@ -53,7 +53,7 @@ class CommentsController {
     }
 
     const record = await prisma.comment.findMany({
-      where: { id: parseInt(req.params.id) }
+      where: { resourceId: parseInt(req.params.id) }
     })
 
     res.locals.result = record
