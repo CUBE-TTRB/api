@@ -49,7 +49,7 @@ model Resource {
   link        String?
   updatedAt   DateTime @default(now())
   createdAt   DateTime @default(now())
-  thumbmail   String?
+  thumbnail   String?
   attachedFiles AttachedFile[]
   comments    Comment[]
 }

@@ -7,7 +7,7 @@ export default class Resource extends ApplicationModel implements Model {
   static permitParams (rawParams: any) {
     if (rawParams === null || rawParams === undefined) return {}
 
-    const permittedParams = ['type', 'body', 'visibility', 'categoryId', 'thumbmail']
+    const permittedParams = ['type', 'body', 'visibility', 'categoryId', 'thumbnail']
     switch (rawParams.type) {
       case Type.ACTIVITY:
         permittedParams.push('title', 'date', 'location')
@@ -47,7 +47,7 @@ export default class Resource extends ApplicationModel implements Model {
 
     this.record = {
       id: initiator?.id,
-      thumbmail: initiator?.thumbmail,
+      thumbnail: initiator?.thumbnail,
       userId: initiator?.userId,
       visibility: initiator?.visibility,
       state: initiator?.state ?? State.SUBMITTED,
@@ -71,12 +71,12 @@ export default class Resource extends ApplicationModel implements Model {
     this.record.userId = value
   }
 
-  get thumbmail (): string {
-    return this.record.thumbmail
+  get thumbnail (): string {
+    return this.record.thumbnail
   }
 
-  set thumbmail (value: string) {
-    this.record.thumbmail = value
+  set thumbnail (value: string) {
+    this.record.thumbnail = value
   }
 
   get visibility (): Visibility {
