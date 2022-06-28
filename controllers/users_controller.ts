@@ -12,7 +12,7 @@ import { Role } from '@prisma/client'
 class UsersController {
   public static permitParams (rawParams: any): any {
     return filterProperties(rawParams, [
-      'name', 'lastName', 'email', 'backgroundImage', 'bornedAt'
+      'name', 'lastName', 'email', 'backgroundImage', 'bornedAt', 'profilePicture'
     ])
   }
 
