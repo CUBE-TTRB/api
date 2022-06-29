@@ -7,7 +7,7 @@
     "start": "tsc && node dist/server.js",
     "serve": "nodemon server.ts",
     "lint": "eslint . --ext .ts",
-    "test": "jest"
+    "test": "DATABASE_URL=postgres://postgres:postgres@localhost:5432/cube-api-test npx prisma migrate reset --force && jest"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.67.0",
@@ -24,6 +24,7 @@
     "@types/jest": "^27.5.1",
     "@types/morgan": "^1.9.3",
     "@types/nodemailer": "^6.4.4",
+    "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
     "eslint": "^7.32.0",
@@ -34,6 +35,7 @@
     "jest": "^28.1.0",
     "nodemon": "^2.0.15",
     "prisma": "^3.8.1",
+    "supertest": "^6.2.3",
     "ts-jest": "^28.0.3",
     "ts-node": "^10.8.0",
     "typescript": "^4.7.2"
