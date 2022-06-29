@@ -8,5 +8,9 @@ else
 fi
 
 export DATABASE_URL=$DATABASE_URL
-npx prisma migrate reset --force
-jest --detectOpenHandles
+
+echo "Resetting database..."
+npx prisma migrate reset --force > /dev/null
+
+echo "Running Jest..."
+jest --detectOpenHandles "$@"
