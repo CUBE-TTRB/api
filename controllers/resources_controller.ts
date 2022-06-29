@@ -79,11 +79,13 @@ class ResourcesController {
         method: 'GET'
       })
       const textResponse = await (await response.text())
-      keysToLinks[attachedfiles[i].key] = textResponse.slice(0, textResponse.length - 1)
+      console.log(textResponse)
+      keysToLinks[attachedfiles[i].key] = textResponse.slice(1, textResponse.length - 2)
     }
     if (record.body != null && typeof (record.body) === typeof (JSON)) {
       const recordBody = record.body as Prisma.JsonObject
       const bodyWithUrl = QuillHelper.replaceKeysByLinks(recordBody, keysToLinks)
+      console.log(bodyWithUrl)
       record.body = bodyWithUrl
     }
 
