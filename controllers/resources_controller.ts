@@ -19,10 +19,21 @@ class ResourcesController {
             { visibility: 'PRIVATE', userId: res.locals.user?.id },
             { visibility: 'SHARED', userId: res.locals.user?.id }
           ]
+        },
+        include: {
+          comments: true,
+          category: true,
+          relations: true
         }
       })
     } else { // ADMIN OR MODERATOR
-      records = await prisma.resource.findMany()
+      records = await prisma.resource.findMany({
+        include: {
+          comments: true,
+          category: true,
+          relations: true
+        }
+      })
     }
 
     const paginator = new Paginator(req, records)
