@@ -75,9 +75,11 @@ class ResourcesController {
 
     for (let i = 0; i < attachedfiles.length; i++) {
       const result = await new AttachedFile(attachedfiles[i]).getPresignedUrl()
-      keysToLinks[attachedfiles[i].key] = result
+      const response = await fetch(result, {
+        method: 'GET'
+      })
+      keysToLinks[attachedfiles[i].key] = await response.text()
     }
-
     if (record.body != null && typeof (record.body) === typeof (JSON)) {
       const recordBody = record.body as Prisma.JsonObject
       const bodyWithUrl = QuillHelper.replaceKeysByLinks(recordBody, keysToLinks)
