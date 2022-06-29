@@ -80,7 +80,7 @@ class ResourcesController {
       })
       const textResponse = await (await response.text())
       console.log(textResponse)
-      keysToLinks[attachedfiles[i].key] = textResponse.slice(1, textResponse.length - 2)
+      keysToLinks[attachedfiles[i].key] = textResponse.slice(1, textResponse.length - 1)
     }
     if (record.body != null && typeof (record.body) === typeof (JSON)) {
       const recordBody = record.body as Prisma.JsonObject
