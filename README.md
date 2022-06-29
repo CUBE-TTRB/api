@@ -1,7 +1,8 @@
 # (Re)Source Relationnelles - API
 
-[![integration](https://github.com/CUBE-TTRB/api/actions/workflows/integration.yml/badge.svg)](https://github.com/CUBE-TTRB/api/actions/workflows/integration.yml)
-[![delivery](https://github.com/CUBE-TTRB/api/actions/workflows/delivery.yml/badge.svg)](https://github.com/CUBE-TTRB/api/actions/workflows/delivery.yml)
+[![test](https://github.com/CUBE-TTRB/api/actions/workflows/test.yml/badge.svg)](https://github.com/CUBE-TTRB/api/actions/workflows/test.yml)
+[![build](https://github.com/CUBE-TTRB/api/actions/workflows/build.yml/badge.svg)](https://github.com/CUBE-TTRB/api/actions/workflows/build.yml)
+[![deploy](https://github.com/CUBE-TTRB/api/actions/workflows/deploy.yml/badge.svg)](https://github.com/CUBE-TTRB/api/actions/workflows/deploy.yml)
 
 ## Usage with Docker
 

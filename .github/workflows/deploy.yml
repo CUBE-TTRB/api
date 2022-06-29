@@ -1,0 +1,23 @@
+name: deploy
+
+on:
+  workflow_run:
+    workflows: [build]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  on-success:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install openssh-client
+        run: sudo apt-get install -y openssh-client
+
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - name: Run deploy script
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} ${{ secrets.DEPLOY_COMMAND }}

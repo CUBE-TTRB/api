@@ -1,12 +1,13 @@
-name: delivery
+name: build
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: [test]
+    types: [completed]
+    branches: [main]
 
 jobs:
-  build:
+  on-success:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Docker Buildx
@@ -24,19 +25,3 @@ jobs:
         with:
           push: true
           tags: rg.fr-par.scw.cloud/cube-ttrb/api:latest
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install openssh-client
-        run: sudo apt-get install -y openssh-client
-
-      - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_KEY }}
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}
-
-      - name: Run deploy script
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} ${{ secrets.DEPLOY_COMMAND }}
