@@ -50,4 +50,7 @@ class Config {
   }
 }
 
-export default Object.freeze(new Config().sanitize())
+const config = new Config()
+if (process.env.NODE_ENV === 'production') config.sanitize()
+Object.freeze(config)
+export default config

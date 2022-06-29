@@ -7,7 +7,7 @@
     "start": "tsc && node dist/server.js",
     "serve": "nodemon server.ts",
     "lint": "eslint . --ext .ts",
-    "test": "DATABASE_URL=postgres://postgres:postgres@localhost:5432/cube-api-test npx prisma migrate reset --force && jest"
+    "test": "sh test_runner.sh"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.67.0",
