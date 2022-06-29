@@ -9,4 +9,4 @@ fi
 
 export DATABASE_URL=$DATABASE_URL
 npx prisma migrate reset --force
-jest
+jest --detectOpenHandles
