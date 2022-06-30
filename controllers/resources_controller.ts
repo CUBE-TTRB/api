@@ -68,12 +68,7 @@ class ResourcesController {
 
   async show (req: Request, res: Response, next: NextFunction) {
     const record = await prisma.resource.findUnique({
-      where: { id: parseInt(req.params.id) },
-      include: {
-        comments: true,
-        category: true,
-        relations: true
-      }
+      where: { id: parseInt(req.params.id) }
     })
     if (record.visibility === Visibility.PRIVATE) {
       const permService = await new PermissionService(res.locals.user, [Role.USER, Role.MODERATOR], record.userId).call()
@@ -98,7 +93,7 @@ class ResourcesController {
       console.log(textResponse)
       keysToLinks[attachedfiles[i].key] = textResponse.slice(1, textResponse.length - 1)
     }
-    if (record.body != null && typeof (record.body) === typeof (JSON)) {
+    if (record.body != null && typeof (record.body) === typeof (JSON) && attachedfiles.length > 0) {
       const recordBody = record.body as Prisma.JsonObject
       const bodyWithUrl = QuillHelper.replaceKeysByLinks(recordBody, keysToLinks)
       console.log(bodyWithUrl)
