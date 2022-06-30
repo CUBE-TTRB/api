@@ -44,6 +44,13 @@ class UsersController {
     next()
   }
 
+  async index (_req: Request, res: Response, next: NextFunction) {
+    const record = await prisma.user.findMany()
+    res.locals.result = record
+    res.status(200)
+    next()
+  }
+
   async show (req: Request, res: Response, next: NextFunction) {
     const record = await prisma.user.findUnique({
       where: { id: parseInt(req.params.id) }

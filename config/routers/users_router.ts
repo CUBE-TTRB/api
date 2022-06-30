@@ -5,7 +5,9 @@ import baseController from '../../controllers/base_controller'
 const usersRouter = express.Router()
 export default usersRouter
 
+usersRouter.get('/', usersController.index)
 usersRouter.post('/', usersController.create)
+
 usersRouter.get('/:id', usersController.show)
 
 usersRouter.patch('/:id', baseController.tokenCheck)
