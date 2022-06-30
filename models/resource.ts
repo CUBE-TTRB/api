@@ -7,7 +7,7 @@ export default class Resource extends ApplicationModel implements Model {
   static permitParams (rawParams: any) {
     if (rawParams === null || rawParams === undefined) return {}
 
-    const permittedParams = ['type', 'body', 'visibility', 'categoryId', 'thumbnail']
+    const permittedParams = ['type', 'body', 'visibility', 'categoryId', 'thumbnail', 'description']
     switch (rawParams.type) {
       case Type.ACTIVITY:
         permittedParams.push('title', 'date', 'location')
@@ -56,6 +56,7 @@ export default class Resource extends ApplicationModel implements Model {
       title: initiator?.title,
       body: initiator?.body,
       link: initiator?.link,
+      description: initiator?.description,
       date: new Date(initiator?.date),
       location: initiator?.location,
       createdAt: initiator?.date,
@@ -69,6 +70,14 @@ export default class Resource extends ApplicationModel implements Model {
 
   set userId (value: number) {
     this.record.userId = value
+  }
+
+  get description (): string {
+    return this.record.description
+  }
+
+  set description (value: string) {
+    this.record.description = value
   }
 
   get thumbnail (): string {

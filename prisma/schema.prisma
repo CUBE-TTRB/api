@@ -50,6 +50,7 @@ model Resource {
   date        DateTime?
   location    String?
   link        String?
+  description String?
   updatedAt   DateTime @default(now())
   createdAt   DateTime @default(now())
   thumbnail   String?
