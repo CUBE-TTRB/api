@@ -68,7 +68,12 @@ class ResourcesController {
 
   async show (req: Request, res: Response, next: NextFunction) {
     const record = await prisma.resource.findUnique({
-      where: { id: parseInt(req.params.id) }
+      where: { id: parseInt(req.params.id) },
+      include: {
+        comments: true,
+        category: true,
+        relations: true
+      }
     })
     if (record.visibility === Visibility.PRIVATE) {
       const permService = await new PermissionService(res.locals.user, [Role.USER, Role.MODERATOR], record.userId).call()
