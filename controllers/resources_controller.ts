@@ -11,23 +11,42 @@ class ResourcesController {
   async index (req: Request, res: Response, next: NextFunction) {
     let records : ResourcePrisma[]
 
-    if (!res.locals.user || res.locals.user?.perm === Role.USER) {
+    if (!res.locals.user) {
       records = await prisma.resource.findMany({
-        where: {
-          OR: [
-            { visibility: 'PUBLIC' },
-            { visibility: 'PRIVATE', userId: res.locals.user?.id },
-            { visibility: 'SHARED', userId: res.locals.user?.id }
-          ]
-        },
+        where: { visibility: 'PUBLIC' },
         include: {
           comments: true,
           category: true,
           relations: true
         }
       })
-    } else { // ADMIN OR MODERATOR
+    } else if (res.locals.user.perm === Role.ADMIN) {
       records = await prisma.resource.findMany({
+        include: {
+          comments: true,
+          category: true,
+          relations: true
+        }
+      })
+    } else {
+      records = await prisma.resource.findMany({
+        where: {
+          OR: [
+            { visibility: 'PUBLIC' },
+            {
+              AND: [
+                { visibility: 'PRIVATE' },
+                { userId: res.locals.user.id }
+              ]
+            },
+            {
+              AND: [
+                { visibility: 'SHARED' },
+                { userId: res.locals.user.id }
+              ]
+            }
+          ]
+        },
         include: {
           comments: true,
           category: true,
