@@ -25,4 +25,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
+          builder: ${{ steps.buildx.outputs.name }}
           tags: rg.fr-par.scw.cloud/cube-ttrb/api:latest
+          cache-from: type=registry,ref=rg.fr-par.scw.cloud/cube-ttrb/api:buildcache
+          cache-to: type=registry,ref=rg.fr-par.scw.cloud/cube-ttrb/api:buildcache,mode=max
